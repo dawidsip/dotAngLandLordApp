@@ -5,7 +5,8 @@
 
 # dotenv files
 .env
-
+.angular
+.vscode
 # User-specific files
 *.rsuser
 *.suo
@@ -483,3 +484,5 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 *.txt
+*.sql
+*.yaml   

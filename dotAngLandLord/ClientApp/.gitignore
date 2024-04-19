@@ -5,7 +5,10 @@
 /tmp
 /out-tsc
 /bazel-out
-
+.angular
+/.angular
+/.vscode
+.vscode
 # Node
 /node_modules
 npm-debug.log
