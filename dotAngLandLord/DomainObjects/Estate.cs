@@ -11,5 +11,6 @@ public class Estate
 
     public string StreetName { get; set; }
     public string StreetNumber { get; set; }
+    public string? FlatNumber { get; set; }
     public DateTime CreatedOn { get; set; }
 }
