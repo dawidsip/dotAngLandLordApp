@@ -5,5 +5,7 @@ namespace dotAngLandLord.Interfaces;
 public interface IEstateService
 {
     IEnumerable<Estate> GetAll();
+
+    Task<IEnumerable<Estate>> GetByUserId(int userId);
     
 }

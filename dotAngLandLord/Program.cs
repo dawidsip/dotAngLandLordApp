@@ -48,7 +48,7 @@ foreach (var est in ests)
     System.Console.WriteLine(String.Format("Id: {0}, UserId: {1}, Name: {2}, City: {3}, Region: {4}, StreetName: {5}, StreetNumber: {6}, FlatNumber: {7}, CreatedOn: {8}", est.Id, est.UserId, est.Name, est.City, est.Region, est.StreetName, est.StreetNumber, est.FlatNumber, est.CreatedOn));
 }
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();

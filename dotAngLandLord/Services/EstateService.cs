@@ -1,5 +1,6 @@
 using dotAngLandLord.DomainObjects;
 using dotAngLandLord.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace dotAngLandLord.Services;
 
@@ -17,5 +18,10 @@ public class EstateService : IEstateService
     public IEnumerable<Estate> GetAll()
     {
         return _context.Estates.ToList();
+    }
+
+    public async Task<IEnumerable<Estate>> GetByUserId(int userId)
+    {
+        return await _context.GetEstatesByUserIdAsync(userId);
     }
 }

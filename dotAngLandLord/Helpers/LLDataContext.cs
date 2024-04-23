@@ -20,4 +20,12 @@ public class LLDataContext : DbContext, ILLDataContext
     public DbSet<User> Users { get; set; }
 
     public DbSet<Estate> Estates { get; set; }
+
+    public async Task<List<Estate>> GetEstatesByUserIdAsync(int userId)
+    {
+        // Use LINQ to query Estates where UserId matches the given userId
+        return await Estates
+            .Where(e => e.UserId == userId)
+            .ToListAsync();
+    }
 }
