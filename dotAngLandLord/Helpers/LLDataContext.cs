@@ -28,4 +28,9 @@ public class LLDataContext : DbContext, ILLDataContext
             .Where(e => e.UserId == userId)
             .ToListAsync();
     }
+
+    public async Task<Estate> GetEstateByIdAsync(int id)
+    {
+        return await Estates.FirstAsync(e => e.Id == id);
+    }
 }

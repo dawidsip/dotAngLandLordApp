@@ -25,7 +25,13 @@ public class EstateController : ControllerBase
         return _estateService.GetAll();
     }
 
-    [HttpGet("{userid}")]
+    [HttpGet("id")]
+    public async Task<Estate> GetById(int id)
+    {
+        return await _estateService.GetById(id);
+    }
+
+    [HttpGet("userid")]
     public async Task<IEnumerable<Estate>> GetByUserId(int userid)
     {
         return await _estateService.GetByUserId(userid);

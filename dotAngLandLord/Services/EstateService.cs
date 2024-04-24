@@ -20,6 +20,11 @@ public class EstateService : IEstateService
         return _context.Estates.ToList();
     }
 
+    public async Task<Estate> GetById(int id)
+    {
+        return await _context.GetEstateByIdAsync(id);
+    }
+
     public async Task<IEnumerable<Estate>> GetByUserId(int userId)
     {
         return await _context.GetEstatesByUserIdAsync(userId);

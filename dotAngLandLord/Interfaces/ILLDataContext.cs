@@ -8,6 +8,7 @@ public interface ILLDataContext
     DbSet<Estate> Estates { get; }
 
     public Task<List<Estate>> GetEstatesByUserIdAsync(int userId);
+    public Task<Estate> GetEstateByIdAsync(int id);
     // Other members if needed
     public int SaveChanges();
 }

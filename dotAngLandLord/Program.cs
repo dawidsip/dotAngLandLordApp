@@ -24,6 +24,18 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
+// Define the CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularDev", builder =>
+    {
+        builder
+            .WithOrigins("http://localhost:4200") // Allow requests from the Angular frontend
+            .AllowAnyHeader() // Allow any HTTP header
+            .AllowAnyMethod() // Allow any HTTP method (GET, POST, PUT, DELETE, etc.)
+            .AllowCredentials(); // Allow sending credentials such as cookies
+    });
+});
 
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IEstateService, EstateService>();
@@ -32,21 +44,22 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors("AllowAngularDev");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-var usrs = app.Services.GetRequiredService<IUserService>().GetAll();
-foreach (var user in usrs)
-{
-    System.Console.WriteLine(String.Format("Id: {0}, FirstName: {1}, LastName: {2}, Email: {3}, Password: {4}, CreatedOn: {5}", user.Id, user.FirstName, user.LastName, user.Email, user.PasswordHash, user.CreatedOn));
-}
+// var usrs = app.Services.GetRequiredService<IUserService>().GetAll();
+// foreach (var user in usrs)
+// {
+//     System.Console.WriteLine(String.Format("Id: {0}, FirstName: {1}, LastName: {2}, Email: {3}, Password: {4}, CreatedOn: {5}", user.Id, user.FirstName, user.LastName, user.Email, user.PasswordHash, user.CreatedOn));
+// }
 
-var ests = app.Services.GetRequiredService<IEstateService>().GetAll();
-foreach (var est in ests)
-{
-    System.Console.WriteLine(String.Format("Id: {0}, UserId: {1}, Name: {2}, City: {3}, Region: {4}, StreetName: {5}, StreetNumber: {6}, FlatNumber: {7}, CreatedOn: {8}", est.Id, est.UserId, est.Name, est.City, est.Region, est.StreetName, est.StreetNumber, est.FlatNumber, est.CreatedOn));
-}
+// var ests = app.Services.GetRequiredService<IEstateService>().GetAll();
+// foreach (var est in ests)
+// {
+//     System.Console.WriteLine(String.Format("Id: {0}, UserId: {1}, Name: {2}, City: {3}, Region: {4}, StreetName: {5}, StreetNumber: {6}, FlatNumber: {7}, CreatedOn: {8}", est.Id, est.UserId, est.Name, est.City, est.Region, est.StreetName, est.StreetNumber, est.FlatNumber, est.CreatedOn));
+// }
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthorization();
