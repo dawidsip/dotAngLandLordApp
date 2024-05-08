@@ -4,5 +4,5 @@ namespace dotAngLandLord.Interfaces;
 
 public interface IUserService
 {
-    IEnumerable<User> GetAll();
+    // IEnumerable<User> GetAll();
 }

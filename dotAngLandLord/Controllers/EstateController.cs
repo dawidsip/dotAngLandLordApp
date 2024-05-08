@@ -32,7 +32,7 @@ public class EstateController : ControllerBase
     }
 
     [HttpGet("userid")]
-    public async Task<IEnumerable<Estate>> GetByUserId(int userid)
+    public async Task<IEnumerable<Estate>> GetByUserId(string userid)
     {
         return await _estateService.GetByUserId(userid);
     }

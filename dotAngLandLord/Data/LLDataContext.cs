@@ -2,10 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using dotAngLandLord.Interfaces;
 
 using dotAngLandLord.DomainObjects;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace dotAngLandLord.Helpers;
+namespace dotAngLandLord.Data;
 
-public class LLDataContext : DbContext, ILLDataContext
+public class LLDataContext : IdentityDbContext, ILLDataContext
 {
     public LLDataContext(DbContextOptions<LLDataContext> options)
         : base(options)
@@ -13,15 +14,16 @@ public class LLDataContext : DbContext, ILLDataContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder); // Ensure base class configurations are applied
         // Configure table name
-        modelBuilder.Entity<User>().ToTable("User"); // Singular table name
+        // modelBuilder.Entity<User>().ToTable("User"); // Singular table name
         modelBuilder.Entity<Estate>().ToTable("Estate"); // Singular table name
     }
-    public DbSet<User> Users { get; set; }
+    // public DbSet<User> Users { get; set; }
 
     public DbSet<Estate> Estates { get; set; }
 
-    public async Task<List<Estate>> GetEstatesByUserIdAsync(int userId)
+    public async Task<List<Estate>> GetEstatesByUserIdAsync(string userId)
     {
         // Use LINQ to query Estates where UserId matches the given userId
         return await Estates

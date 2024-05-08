@@ -15,8 +15,8 @@ public class UserService : IUserService
         _logger = logger;
     }
 
-    public IEnumerable<User> GetAll()
-    {
-        return _context.Users.ToList();
-    }
+    // public IEnumerable<User> GetAll()
+    // {
+    //     return _context.Users.ToList();
+    // }
 }

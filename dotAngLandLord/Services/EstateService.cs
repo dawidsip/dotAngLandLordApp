@@ -25,7 +25,7 @@ public class EstateService : IEstateService
         return await _context.GetEstateByIdAsync(id);
     }
 
-    public async Task<IEnumerable<Estate>> GetByUserId(int userId)
+    public async Task<IEnumerable<Estate>> GetByUserId(string userId)
     {
         return await _context.GetEstatesByUserIdAsync(userId);
     }
