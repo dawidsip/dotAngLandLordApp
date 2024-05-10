@@ -22,7 +22,7 @@ import { EstateService } from '../estate.service';
     <app-estate *ngFor="let est of filteredEstateList" [estate]="est"></app-estate>
   </section>
   `,
-  styleUrl: './dashboard.component.scss'
+  styleUrls: ['./dashboard.component.scss'] // Fixed typo, `styleUrls`
 })
 export class DashboardComponent implements OnInit {
 
@@ -30,10 +30,10 @@ export class DashboardComponent implements OnInit {
   filteredEstateList: Estate[] = [];
   estateService: EstateService = inject(EstateService);
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {this.fetchUserEstates();}
 
   ngOnInit() {
-    this.fetchUserEstates(); // Fetch user information on initialization
+    // this.fetchUserEstates(); // Fetch user information on initialization
   }
 
   fetchUserEstates() {
@@ -42,6 +42,7 @@ export class DashboardComponent implements OnInit {
       .subscribe(
         (response: any) => {
           this.estateList = response; // Store user information for rendering
+          this.filteredEstateList = response; // Store user information for rendering
         },
         (error) => {
           console.error('Failed to fetch user information', error);
