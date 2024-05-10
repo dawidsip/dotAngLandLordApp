@@ -114,9 +114,9 @@ namespace dotAngLandLord.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    _logger.LogInformation("User logged in, and rutrning to: " + returnUrl);
                     // return LocalRedirect(returnUrl);
-                    return Redirect("localhost:4200");
+                    return Redirect("http://localhost:4200" + returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {

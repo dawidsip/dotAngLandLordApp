@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using dotAngLandLord.DomainObjects;
 using dotAngLandLord.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,10 +21,35 @@ public class EstateController : ControllerBase
         _estateService = estateService;
     }
 
+    // [HttpGet]
+    // public IEnumerable<Estate> GetAll()
+    // {
+    //     return _estateService.GetAll();
+    // }
+
+    [Authorize]
     [HttpGet]
-    public IEnumerable<Estate> GetAll()
+    public async Task<IActionResult> GetUsersEstates()
     {
-        return _estateService.GetAll();
+        System.Console.WriteLine("Entered GetUsersEstates");
+        var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Console.WriteLine("user ID is: " + userId);
+        // userId = userId is not null ? "2" : null;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("User ID not found in claims.");
+        }
+
+        // Fetch the user's estates from the service
+        var userEstates = await _estateService.GetByUserId(userId);
+
+        if (userEstates == null || !userEstates.Any())
+        {
+            System.Console.WriteLine("not found entered GetUsersEstates");
+            return NotFound($"No estates found for user ID: {userId}");
+        }
+
+        return Ok(userEstates); // Return the user's estates
     }
 
     [HttpGet("id")]
