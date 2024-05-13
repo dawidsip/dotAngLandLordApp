@@ -6,11 +6,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { EstateComponent } from '../estate/estate.component';
 import { Estate } from '../estate';
 import { EstateService } from '../estate.service';
-
+import { CreateNewEstateComponent } from '../create-new-estate/create-new-estate.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, EstateComponent],
+  imports: [CommonModule, HttpClientModule, EstateComponent, CreateNewEstateComponent],
   template: `
   <section>
     <form>
@@ -20,6 +20,7 @@ import { EstateService } from '../estate.service';
   </section>
   <section class="results">
     <app-estate *ngFor="let est of filteredEstateList" [estate]="est"></app-estate>
+    <app-create-new-estate></app-create-new-estate>
   </section>
   `,
   styleUrls: ['./dashboard.component.scss'] // Fixed typo, `styleUrls`
