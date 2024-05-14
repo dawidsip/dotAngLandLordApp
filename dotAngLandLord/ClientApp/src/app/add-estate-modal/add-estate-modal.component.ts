@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule,  } from '@angular/common';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -7,6 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field'; // Import Mat
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { Estate } from '../estate';
+import { EstateService } from '../estate.service';
 
 
 @Component({
@@ -51,7 +53,9 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './add-estate-modal.component.scss'
 })
 export class AddEstateModalComponent implements OnInit {
+
   estateForm!: FormGroup;
+  estateService: EstateService = inject(EstateService);
 
   constructor(
     private dialogRef: MatDialogRef<AddEstateModalComponent>,
@@ -71,13 +75,28 @@ export class AddEstateModalComponent implements OnInit {
       streetName: ['', Validators.required],
       streetNumber: ['', [Validators.required, Validators.pattern(/^\d*$/)]],
       flatNumber: ['', [Validators.required, Validators.pattern(/^\d*$/)]],
-
     });
   }
 
   onSubmit() {
     if (this.estateForm.valid) {
       // Submit form data
+      const newEstate: Estate = {
+        id: 0,
+        userId: '',
+        name: this.estateForm.value.name,
+        city: this.estateForm.value.city,
+        region: this.estateForm.value.region,
+        country: this.estateForm.value.country,
+        streetName: this.estateForm.value.streetName,
+        streetNumber: this.estateForm.value.streetNumber,
+        flatNumber: this.estateForm.value.flatNumber,
+        createdOn: new Date(),
+        photo: ''
+      };
+      
+      var persistedEstate = this.estateService.postNewEstate(newEstate);
+      console.log(persistedEstate);
       this.dialogRef.close(this.estateForm.value);
     }
   }

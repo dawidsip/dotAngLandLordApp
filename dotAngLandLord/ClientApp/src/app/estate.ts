@@ -1,13 +1,13 @@
 export interface Estate {
-    id: number;
-    userId: number;
+    id: number | undefined;
+    userId: string | undefined;
     name: string;
     city: string;
     region: string;
     country: string;
-    photo: string;
     streetName: string;
     streetNumber: string;
     flatNumber: string;
-    createdOn: Date;
+    createdOn: Date | undefined;
+    photo: string | undefined;
   }

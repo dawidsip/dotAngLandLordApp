@@ -12,7 +12,6 @@ namespace dotAngLandLord.Controllers;
 public class EstateController : ControllerBase
 {
     private readonly ILogger<EstateController> _logger;
-
     private readonly IEstateService _estateService;
 
     public EstateController(ILogger<EstateController> logger, IEstateService estateService)
@@ -50,6 +49,30 @@ public class EstateController : ControllerBase
         }
 
         return Ok(userEstates); // Return the user's estates
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<ActionResult<Estate>> AddNewEstate([FromBody] Estate estate)
+    {        
+        if (estate == null)
+        {
+            Console.WriteLine();
+            return BadRequest("Estate object is null.");
+        }
+
+        try
+        {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            System.Console.WriteLine(" user ID is: " + userId);
+            var createdEstate = await _estateService.AddNewEstate(estate, userId);
+            return CreatedAtAction(nameof(AddNewEstate), new { id = createdEstate.Name }, createdEstate);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (optional)
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
 
     [HttpGet("id")]

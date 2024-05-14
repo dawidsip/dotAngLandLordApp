@@ -8,6 +8,7 @@ public interface IEstateService
 
     Task<IEnumerable<Estate>> GetByUserId(string userId);
 
+    Task<Estate> AddNewEstate(Estate estate, string userId);
     Task<Estate> GetById(int id);
     
 }

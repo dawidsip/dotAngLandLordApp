@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using dotAngLandLord.DomainObjects;
 using dotAngLandLord.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -28,5 +29,14 @@ public class EstateService : IEstateService
     public async Task<IEnumerable<Estate>> GetByUserId(string userId)
     {
         return await _context.GetEstatesByUserIdAsync(userId);
+    }
+
+    public async Task<Estate> AddNewEstate(Estate newEstate, string userId)
+    {
+        newEstate.CreatedOn = DateTime.Now;
+        newEstate.UserId = userId;
+        var entityEntry = await _context.Estates.AddAsync(newEstate);
+        _context.SaveChanges();
+        return entityEntry.Entity;
     }
 }

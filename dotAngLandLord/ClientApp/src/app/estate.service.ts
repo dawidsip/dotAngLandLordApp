@@ -8,7 +8,7 @@ export class EstateService {
 
   constructor() { }
   readonly baseUrl = 'https://angular.io/assets/images/tutorials/faa';
-  url = 'https://localhost:7127/estate';
+  url = 'http://localhost:5283/estate';
 
   async getAllEstates(): Promise<Estate[]> {
     const data = await fetch(this.url);
@@ -25,6 +25,17 @@ export class EstateService {
     return await data.json() ?? {};
   }
 
+  async postNewEstate(newEstate: Estate): Promise<Estate | undefined> {
+    const data = await fetch(this.url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(newEstate)
+    });
+    return await data.json() ?? {};
+  }
   submitApplication(firstName: string, lastName: string, email: string) {
     console.log(`Homes application received: firstName: ${firstName}, lastName: ${lastName}, email: ${email}.`);
   }

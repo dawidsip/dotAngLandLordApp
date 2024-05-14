@@ -25,11 +25,15 @@ public class LLDataContext : IdentityDbContext, ILLDataContext
 
     public async Task<List<Estate>> GetEstatesByUserIdAsync(string userId)
     {
-        // Use LINQ to query Estates where UserId matches the given userId
         return await Estates
             .Where(e => e.UserId == userId)
             .ToListAsync();
     }
+
+    // public async void AddNewEstate(Estate newEstate)
+    // {
+    //     await Estates.AddAsync(newEstate);
+    // }
 
     public async Task<Estate> GetEstateByIdAsync(int id)
     {
