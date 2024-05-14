@@ -6,14 +6,20 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field'; // Import MatFormFieldModule
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
   selector: 'app-add-estate-modal',
   standalone: true,
-  imports: [ CommonModule, MatDialogModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, ],
+  imports: [ CommonModule, MatDialogModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatIconModule],
   template: `
-    <h2 mat-dialog-title>Add Estate</h2>
+    <div mat-dialog-title class="dialog-title">
+      <h2 mat-dialog-title>Add Estate</h2>
+      <button mat-icon-button aria-label="close dialog" mat-dialog-close>
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
     <form [formGroup]="estateForm" (ngSubmit)="onSubmit()">
       <mat-dialog-content>
         <mat-form-field>
@@ -23,12 +29,23 @@ import { MatInputModule } from '@angular/material/input';
           <input matInput placeholder="City" formControlName="city">
         </mat-form-field>
         <mat-form-field>
-          <input matInput placeholder="Street" formControlName="street">
+          <input matInput placeholder="Region" formControlName="region">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Country" formControlName="country">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Street name" formControlName="streetName">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Street number" formControlName="streetNumber">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Flat number" formControlName="flatNumber">
         </mat-form-field>
       </mat-dialog-content>
       <mat-dialog-actions>
-        <button mat-button (click)="onCancel()">Cancel</button>
-        <button mat-button type="submit" [disabled]="!estateForm.valid">Add</button>
+        <button mat-button type="submit" [disabled]="!estateForm.valid" color="primary">Create</button>
       </mat-dialog-actions>
     </form>`,
   styleUrl: './add-estate-modal.component.scss'
@@ -49,7 +66,12 @@ export class AddEstateModalComponent implements OnInit {
     this.estateForm = this.fb.group({
       name: ['', Validators.required],
       city: ['', Validators.required],
-      street: ['', Validators.required]
+      region: ['', Validators.required],
+      country: ['', Validators.required],
+      streetName: ['', Validators.required],
+      streetNumber: ['', [Validators.required, Validators.pattern(/^\d*$/)]],
+      flatNumber: ['', [Validators.required, Validators.pattern(/^\d*$/)]],
+
     });
   }
 
