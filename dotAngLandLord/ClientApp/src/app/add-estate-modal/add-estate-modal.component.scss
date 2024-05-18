@@ -1,7 +1,19 @@
 .dialog-title {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+
+    .h2 {
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+    }
+
+    .close-button {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+      }
   }
 
   mat-form-field {
@@ -9,3 +21,17 @@
     padding-left: 10%;
     padding-right: 10%;
   }
+
+.image-upload-container {
+  width: 90%;
+  height: 15%;
+  padding-left: 5%;
+  padding-right: 5%;
+  outline-style: groove;
+  outline-color: var(--primary-color);
+  border-radius: 8px;
+  margin: 5px;
+  display: flexbox;
+  justify-content: center;
+  align-items: center;
+}

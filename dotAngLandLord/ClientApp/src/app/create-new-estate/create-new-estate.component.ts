@@ -24,7 +24,7 @@ export class CreateNewEstateComponent implements OnInit{
   
   openDialog() {
     const dialogRef = this.dialog.open(AddEstateModalComponent, {
-      width: '50%',
+      width: '75%',
       hasBackdrop: true,
       backdropClass: 'no-close',
       disableClose: true,
@@ -34,7 +34,8 @@ export class CreateNewEstateComponent implements OnInit{
     
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      this.estateCreated.emit(result);
+      if(result)
+        this.estateCreated.emit(result);
     });
   }
   

@@ -16,10 +16,14 @@ import { EstateService } from '../estate.service';
   imports: [ CommonModule, MatDialogModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatIconModule],
   template: `
     <div mat-dialog-title class="dialog-title">
+
       <h2 mat-dialog-title>Add Estate</h2>
-      <button mat-icon-button aria-label="close dialog" mat-dialog-close>
+      <button class="close-button" mat-icon-button aria-label="close dialog" mat-dialog-close (ngClick)="onCancel()">
         <mat-icon>close</mat-icon>
       </button>
+    </div>
+    <div class="image-upload-container">
+
     </div>
     <form [formGroup]="estateForm" (ngSubmit)="onSubmit()">
       <mat-dialog-content>
@@ -101,7 +105,7 @@ export class AddEstateModalComponent implements OnInit {
         console.error('Failed to persist new estate', error);
       });
       
-      this.dialogRef.close(this.estateForm.value);
+      this.dialogRef.close();
     }
   }
 
