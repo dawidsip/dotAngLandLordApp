@@ -25,6 +25,18 @@ export class EstateService {
     return await data.json() ?? {};
   }
 
+  async getUserEstates(): Promise<Estate[] | undefined> {
+    const data = await fetch(this.url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+
+    return await data.json() ?? {};
+  }
+
   async postNewEstate(newEstate: Estate): Promise<Estate | undefined> {
     const data = await fetch(this.url, {
       method: 'POST',
@@ -36,6 +48,7 @@ export class EstateService {
     });
     return await data.json() ?? {};
   }
+
   submitApplication(firstName: string, lastName: string, email: string) {
     console.log(`Homes application received: firstName: ${firstName}, lastName: ${lastName}, email: ${email}.`);
   }
