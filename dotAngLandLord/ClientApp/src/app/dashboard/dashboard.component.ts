@@ -20,10 +20,10 @@ import { CreateNewEstateComponent } from '../create-new-estate/create-new-estate
   </section>
   <section class="results">
     <app-estate *ngFor="let est of filteredEstateList" [estate]="est"></app-estate>
-    <app-create-new-estate></app-create-new-estate>
+    <app-create-new-estate (estateCreated)="onEstateCreate($event)"></app-create-new-estate>
   </section>
   `,
-  styleUrls: ['./dashboard.component.scss'] // Fixed typo, `styleUrls`
+  styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
 
@@ -31,27 +31,24 @@ export class DashboardComponent implements OnInit {
   filteredEstateList: Estate[] = [];
   estateService: EstateService = inject(EstateService);
 
-  constructor(private http: HttpClient, private router: Router) {this.fetchUserEstates();}
-
-  ngOnInit() {
-    // this.fetchUserEstates(); // Fetch user information on initialization
+  constructor(private http: HttpClient, private router: Router)
+  {
   }
 
-  fetchUserEstates() {
-    this.http
-      .get('http://localhost:5283/estate', { withCredentials: true }) // Include cookies for authentication
-      .subscribe(
-        (response: any) => {
-          this.estateList = response; // Store user information for rendering
-          this.filteredEstateList = response; // Store user information for rendering
-        },
-        (error) => {
-          console.error('Failed to fetch user information', error);
-          // Redirect to login if unauthorized
-          window.location.href = 'http://localhost:5283/Identity/Account/Login?returnUrl=/dashboard';
-          // this.router.navigate(['/login']);
-        }
-      );
+  onEstateCreate(estate: Estate) {
+    this.estateList.push(estate);
+  }
+
+  ngOnInit() {
+    this.estateService.getUserEstates().then((resultEstates: Estate[] | undefined) => {
+      if (resultEstates) {
+        this.estateList = resultEstates;
+        this.filteredEstateList = resultEstates; 
+      }
+    }).catch((error) => {
+      console.error('Failed to fetch user estates', error);
+      window.location.href = 'http://localhost:5283/Identity/Account/Login?returnUrl=/dashboard';
+    });
   }
 
   filterResults(text: string) {

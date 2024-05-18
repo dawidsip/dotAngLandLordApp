@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { AddEstateModalComponent } from '../add-estate-modal/add-estate-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Estate } from '../estate';
 
 @Component({
   selector: 'app-create-new-estate',
@@ -16,8 +17,11 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class CreateNewEstateComponent implements OnInit{
 
+  // @Input() estateList: Estate[] = [];
+  @Output() estateCreated = new EventEmitter<Estate>();
   constructor(private dialog: MatDialog) {}
 
+  
   openDialog() {
     const dialogRef = this.dialog.open(AddEstateModalComponent, {
       width: '50%',
@@ -30,7 +34,7 @@ export class CreateNewEstateComponent implements OnInit{
     
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      // Handle any result from dialog if needed
+      this.estateCreated.emit(result);
     });
   }
   

@@ -10,7 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { Estate } from '../estate';
 import { EstateService } from '../estate.service';
 
-
 @Component({
   selector: 'app-add-estate-modal',
   standalone: true,
@@ -47,7 +46,7 @@ import { EstateService } from '../estate.service';
         </mat-form-field>
       </mat-dialog-content>
       <mat-dialog-actions>
-        <button mat-button type="submit" [disabled]="!estateForm.valid" color="primary">Create</button>
+        <button class="primary" type="button" mat-button type="submit" [disabled]="!estateForm.valid" color="primary">Create</button>
       </mat-dialog-actions>
     </form>`,
   styleUrl: './add-estate-modal.component.scss'
@@ -94,9 +93,14 @@ export class AddEstateModalComponent implements OnInit {
         createdOn: new Date(),
         photo: ''
       };
+
+      this.estateService.postNewEstate(newEstate).then((persistedEstate: Estate | undefined) => {
+        // console.log(persistedEstate);
+        this.dialogRef.close(persistedEstate);
+      }).catch((error) => {
+        console.error('Failed to persist new estate', error);
+      });
       
-      var persistedEstate = this.estateService.postNewEstate(newEstate);
-      console.log(persistedEstate);
       this.dialogRef.close(this.estateForm.value);
     }
   }
