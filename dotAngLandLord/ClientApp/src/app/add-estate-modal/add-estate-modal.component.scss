@@ -22,16 +22,44 @@
     padding-right: 10%;
   }
 
-.image-upload-container {
-  width: 90%;
-  height: 15%;
-  padding-left: 5%;
-  padding-right: 5%;
-  outline-style: groove;
-  outline-color: var(--primary-color);
-  border-radius: 8px;
-  margin: 5px;
-  display: flexbox;
-  justify-content: center;
-  align-items: center;
+  .upload-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+    .image-upload-container {
+    width: 80%;
+    height: 15%;
+    padding-left: 5%;
+    padding-right: 5%;
+    outline-style: solid;
+    outline-color: var(--shadow-color);
+    border-radius: 5px;
+    margin: 5px;
+    display: flex;
+        justify-content: space-between; /* Changed from left to space-between */
+    align-items: left;
+        
+        .img-group {
+            display: flex;
+        }
+
+        .img-container {
+            width: 75px;
+            height: 65px;
+            display: flex;
+            justify-content: left;
+            align-items: left;
+            background-color: var(--shadow-color);
+            margin: 5px;
+        }
+
+        .upload-button {
+            justify-content: flex-end; /* Changed from right to flex-end */
+            align-self: last baseline; /* Changed from right to center */
+            margin-left: auto; /* Pushes the button to the far right */
+            margin-bottom: 5px;
+        }
+    }
 }

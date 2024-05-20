@@ -7,6 +7,7 @@ using Microsoft.Extensions;
 using dotAngLandLord.Data;
 using dotAngLandLord.Interfaces;
 using dotAngLandLord.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,11 @@ connectionString = connectionString.Replace("${LL_DB_LOCAL_DOT_USER}", Environme
 connectionString = connectionString.Replace("${LL_DB_LOCAL_PASS}", Environment.GetEnvironmentVariable("LL_DB_LOCAL_PASS"));
 
 builder.Services.AddControllers();
+    // .AddJsonOptions(options =>
+    //             {
+    //                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    //             });
+
 builder.Services.AddDbContext<ILLDataContext, LLDataContext>(opt =>
     opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)), ServiceLifetime.Singleton);
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();

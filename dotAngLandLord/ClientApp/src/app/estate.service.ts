@@ -34,20 +34,71 @@ export class EstateService {
       credentials: 'include'
     });
 
-    return await data.json() ?? {};
+    return await data.json() ?? [];
   }
 
   async postNewEstate(newEstate: Estate): Promise<Estate | undefined> {
-    const data = await fetch(this.url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify(newEstate)
+    const formData = new FormData();
+  
+    // Add Estate fields to formData
+    formData.append('name', newEstate.name);
+    formData.append('city', newEstate.city);
+    formData.append('region', newEstate.region);
+    formData.append('country', newEstate.country);
+    formData.append('streetName', newEstate.streetName);
+    formData.append('streetNumber', newEstate.streetNumber);
+    formData.append('flatNumber', newEstate.flatNumber ?? '');
+    formData.append('createdOn', newEstate.createdOn?.toISOString() ?? '');
+    console.log("postNewEstate gets an estate with this many images: ");
+    console.log(newEstate.images.length);
+    // Add images to formData
+    newEstate.images?.forEach((image, index) => {
+      if (image.id !== undefined) {
+        formData.append(`images[${index}].id`, String(image.id));
+      }
+      if (image.estateId !== undefined) {
+        formData.append(`images[${index}].estateId`, String(image.estateId));
+      }
+      formData.append(`images[${index}].fileName`, image.fileName);
+      formData.append(`images[${index}].isMain`, String(image.isMain));
+      if (image.data) {
+        formData.append(`images[${index}].data`, new Blob([image.data], { type: 'application/octet-stream' }), image.fileName);
+      }
+
     });
-    return await data.json() ?? {};
+  
+      // Debugging the formData
+      formData.forEach((value, key) => {
+        console.log(key, value);
+      });
+
+    const response = await fetch(this.url, {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    });
+  
+    if (response.ok) {
+      console.log('Estate persisted successfully, with response ok returned'); 
+      return await response.json();
+    } else {
+      console.error('Failed to persist new estate');
+      return undefined;
+    }
   }
+  
+
+  // async postNewEstate(newEstate: Estate): Promise<Estate | undefined> {
+  //   const data = await fetch(this.url, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     credentials: 'include',
+  //     body: JSON.stringify(newEstate)
+  //   });
+  //   return await data.json() ?? {};
+  // }
 
   submitApplication(firstName: string, lastName: string, email: string) {
     console.log(`Homes application received: firstName: ${firstName}, lastName: ${lastName}, email: ${email}.`);

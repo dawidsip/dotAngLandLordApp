@@ -3,15 +3,16 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { EstateService } from '../estate.service';
 import { Estate } from '../estate';
+import { Image } from '../image';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   template: `
   <article>
-    <img class="listing-photo" [src]="estate?.photo"
+    <img class="listing-photo" *ngIf="mainImage" [src]="mainImage"
       alt="Exterior photo of {{estate?.name}}"/>
     <section class="listing-description">
       <h2 class="listing-heading">{{estate?.name}}</h2>
@@ -46,9 +47,11 @@ styleUrl: './details.component.scss'
 
 export class DetailsComponent {
 
+  
   route: ActivatedRoute = inject(ActivatedRoute);
   estateService = inject(EstateService);
-  estate: Estate | undefined;
+  estate!: Estate | undefined;
+  mainImage: Image | undefined = this.estate?.images?.find((image) => image.isMain === true);
 
   applyForm = new FormGroup({
     firstName: new FormControl(''),

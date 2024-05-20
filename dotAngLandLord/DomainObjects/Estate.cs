@@ -34,4 +34,8 @@ public class Estate
 
     [JsonProperty("createdOn")]
     public DateTime CreatedOn { get; set; } = DateTime.Now;
+
+
+    [JsonProperty("images")]
+    public ICollection<Image> Images { get; set; } = new List<Image>();
 }

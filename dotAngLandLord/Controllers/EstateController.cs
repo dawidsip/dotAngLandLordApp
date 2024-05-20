@@ -51,29 +51,58 @@ public class EstateController : ControllerBase
         return Ok(userEstates); // Return the user's estates
     }
 
+
+
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<Estate>> AddNewEstate([FromBody] Estate estate)
+    public async Task<ActionResult<Estate>> AddNewEstate()
     {        
-        if (estate == null)
+        if (Request.ReadFormAsync().Result == null)
         {
-            Console.WriteLine();
+            Console.WriteLine("Estate appears to be null.");
             return BadRequest("Estate object is null.");
         }
 
         try
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            System.Console.WriteLine(" user ID is: " + userId);
-            var createdEstate = await _estateService.AddNewEstate(estate, userId);
-            return CreatedAtAction(nameof(AddNewEstate), new { id = createdEstate.Name }, createdEstate);
+            // System.Console.WriteLine("File name is : " + estate?.Images?.ElementAt(0)?.FileName);
+            System.Console.WriteLine("User ID is: " + userId);
+            var createdEstate = await _estateService.AddNewEstate(Request.ReadFormAsync().Result, userId);
+            return CreatedAtAction(nameof(AddNewEstate), new { id = createdEstate.Id }, createdEstate);
         }
         catch (Exception ex)
         {
-            // Log the exception (optional)
+            _logger.LogError("500, Internal server error: " + ex.Message);
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
+
+    // [Authorize]
+    // [HttpPost]
+    // public async Task<ActionResult<Estate>> AddNewEstate([FromBody] Estate estate)
+    // {        
+    //     if (estate == null)
+    //     {
+    //         Console.WriteLine("Estate appears to be null.");
+    //         return BadRequest("Estate object is null.");
+    //     }
+
+    //     try
+    //     {
+    //         var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+    //         System.Console.WriteLine("File name is : " + estate?.Images?.ElementAt(0)?.FileName);
+    //         System.Console.WriteLine("User ID is: " + userId);
+    //         var createdEstate = await _estateService.AddNewEstate(estate, userId);
+    //         return CreatedAtAction(nameof(AddNewEstate), new { id = createdEstate.Id }, createdEstate);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         // Log the exception (optional)
+    //         return StatusCode(500, $"Internal server error: {ex.Message}");
+    //     }
+    // }
 
     [HttpGet("id")]
     public async Task<Estate> GetById(int id)

@@ -486,3 +486,10 @@ $RECYCLE.BIN/
 *.txt
 *.sql
 *.yaml   
+
+*.jpg
+*.JPG
+*.jpeg
+*.JPEG
+*.png
+*.PNG

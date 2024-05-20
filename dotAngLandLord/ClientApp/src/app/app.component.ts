@@ -7,10 +7,11 @@ import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 
 
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, HomeComponent, MatIconModule, FormsModule, ReactiveFormsModule, MatDialogModule],
+  imports: [RouterOutlet, RouterModule, HomeComponent, MatIconModule, FormsModule, ReactiveFormsModule, MatDialogModule,],
   template: `
     <main>
       <a [routerLink]="['/']">
@@ -27,6 +28,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 })
 export class AppComponent {
   wwwroot: string = '/assets';
+  
   // wwwroot: string = 'localhost:7127';
   title = 'homes';
 }
