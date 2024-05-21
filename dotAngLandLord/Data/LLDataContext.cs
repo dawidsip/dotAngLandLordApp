@@ -51,4 +51,9 @@ public class LLDataContext : IdentityDbContext, ILLDataContext
             .Include(estate => estate.Images)
             .FirstAsync(e => e.Id == id);
     }
+
+    public Task<int> SaveChangesAsync()
+    {
+        return base.SaveChangesAsync();
+    }
 }

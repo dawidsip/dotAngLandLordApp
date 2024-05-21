@@ -57,7 +57,8 @@ public class EstateController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Estate>> AddNewEstate()
     {        
-        if (Request.ReadFormAsync().Result == null)
+        var form = await Request.ReadFormAsync();
+        if (form == null)
         {
             Console.WriteLine("Estate appears to be null.");
             return BadRequest("Estate object is null.");
@@ -66,9 +67,15 @@ public class EstateController : ControllerBase
         try
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            // System.Console.WriteLine("File name is : " + estate?.Images?.ElementAt(0)?.FileName);
-            System.Console.WriteLine("User ID is: " + userId);
-            var createdEstate = await _estateService.AddNewEstate(Request.ReadFormAsync().Result, userId);
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("User ID not found.");
+                return Unauthorized("User ID not found.");
+            }
+
+            _logger.LogInformation($"User ID: {userId}");
+        
+            var createdEstate = await _estateService.AddNewEstate(form, userId);
             return CreatedAtAction(nameof(AddNewEstate), new { id = createdEstate.Id }, createdEstate);
         }
         catch (Exception ex)

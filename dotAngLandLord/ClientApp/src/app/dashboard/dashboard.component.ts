@@ -36,7 +36,9 @@ export class DashboardComponent implements OnInit {
   }
 
   onEstateCreate(estate: Estate) {
+    console.log("wracamy do dashboard z nowym estatem")
     this.estateList.push(estate);
+    // this.filteredEstateList.push(estate);
   }
 
   ngOnInit() {

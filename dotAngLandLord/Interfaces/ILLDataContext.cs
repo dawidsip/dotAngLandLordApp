@@ -11,5 +11,5 @@ public interface ILLDataContext
 
     public Task<Estate> GetEstateByIdAsync(int id);
     // Other members if needed
-    public int SaveChanges();
+    public Task<int> SaveChangesAsync();
 }

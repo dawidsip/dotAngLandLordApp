@@ -28,11 +28,11 @@ import {MatRippleModule} from '@angular/material/core';
     <div class="upload-container">
       <div class="image-upload-container">
         <div class="img-group">
-          <div class="img-container"><img *ngIf="images.length > 0" [src]="'http://localhost:5283/UserImages/' + images[0].fileName"/></div>
-          <div class="img-container"><img *ngIf="images.length > 1" [src]="'http://localhost:5283/UserImages/' + images[1].fileName"/></div>
-          <div class="img-container"><img *ngIf="images.length > 2" [src]="'http://localhost:5283/UserImages/' + images[2].fileName"/></div>
-          <div class="img-container"><img *ngIf="images.length > 3" [src]="'http://localhost:5283/UserImages/' + images[3].fileName"/></div>
-          <div class="img-container"><img *ngIf="images.length > 4" [src]="'http://localhost:5283/UserImages/' + images[4].fileName"/></div>
+          <div class="img-container"><img *ngIf="imagePreviews.length > 0" [src]="imagePreviews[0].src"/></div>
+          <div class="img-container"><img *ngIf="imagePreviews.length > 1" [src]="imagePreviews[1].src"/></div>
+          <div class="img-container"><img *ngIf="imagePreviews.length > 2" [src]="imagePreviews[2].src"/></div>
+          <div class="img-container"><img *ngIf="imagePreviews.length > 3" [src]="imagePreviews[3].src"/></div>
+          <div class="img-container"><img *ngIf="imagePreviews.length > 4" [src]="imagePreviews[4].src"/></div>
         </div>
         <button matRipple [matRippleColor]="myColor" class="primary upload-button" color="primary" type="button" mat-raised-button aria-label="upload dialog" (click)="fileInput.click()">
         <input hidden (change)="onFileSelected($event)" #fileInput type="file" multiple accept="image/png, image/jpeg">
@@ -77,6 +77,7 @@ export class AddEstateModalComponent implements OnInit {
   images: Image[] = [];
   estateForm!: FormGroup;
   estateService: EstateService = inject(EstateService);
+  imagePreviews: { src: string, fileName: string }[] = [];
 
   constructor(
     private dialogRef: MatDialogRef<AddEstateModalComponent>,
@@ -98,6 +99,18 @@ export class AddEstateModalComponent implements OnInit {
             isMain: index === 0, 
             data: data
           });
+
+          const reader = new FileReader();
+      
+          reader.onload = (e: any) => {
+            this.imagePreviews.push({
+              src: e.target.result,
+              fileName: file.name
+            });
+          };
+
+          reader.readAsDataURL(file); // Convert the file to Base64
+
           console.log(this.images);
         }).catch((err) => {
           console.error('Error reading file data:', err);
@@ -105,6 +118,7 @@ export class AddEstateModalComponent implements OnInit {
       });
     }
   }
+  
   ngOnInit() {
     this.createForm();
   }
@@ -144,8 +158,7 @@ export class AddEstateModalComponent implements OnInit {
       }).catch((error) => {
         console.error('Failed to persist new estate', error);
       });
-      
-      this.dialogRef.close();
+    
     }
   }
 

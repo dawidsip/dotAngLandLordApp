@@ -53,6 +53,11 @@
             align-items: left;
             background-color: var(--shadow-color);
             margin: 5px;
+            
+            overflow: hidden;
+            border: 1px solid #ccc;
+            // align-items: center;
+            // justify-content: center;
         }
 
         .upload-button {

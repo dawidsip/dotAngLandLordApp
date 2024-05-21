@@ -31,51 +31,46 @@ public class EstateService : IEstateService
         return await _context.GetEstatesByUserIdAsync(userId);
     }
 
-    public async Task<Estate> AddNewEstate(IFormCollection formCollection, string userId)
-    {
-
-        // foreach(var image in newEstate.Images)
-        // {
-        //     System.Console.WriteLine();
-        //     System.Console.WriteLine(image.FileName);
-        //     System.Console.WriteLine();
-        // }    
-        var newEstate = ComposeEstateFromFormData(formCollection);
+    public async Task<Estate?> AddNewEstate(IFormCollection formCollection, string userId)
+    {  
+        var newEstate = await ComposeEstateFromFormData(formCollection);
         newEstate.UserId = userId;
 
         var entityEntry = await _context.Estates.AddAsync(newEstate);
-        if(_context.SaveChanges() > 0)
+        if(await _context.SaveChangesAsync() > 0)
         {
-            SaveFiles(newEstate.Images);
+            await SaveFiles(newEstate.Images);
+            return (Estate) entityEntry.Entity;
         }
-        return (Estate) entityEntry.Entity;
+        return null;
     }
 
-    private bool SaveFiles(IEnumerable<Image> images, string directory = "wwwroot/UserImages/")
+    private async Task<bool> SaveFiles(IEnumerable<Image> images, string directory = "wwwroot/UserImages/")
     {
         if (!Directory.Exists(directory))
         {
-            System.Console.WriteLine("Directory not found: " + directory);
-            // Directory.CreateDirectory(directory);
+            Directory.CreateDirectory(directory);
         }
 
         try
         {
             foreach (var image in images)
             {
-                if(!File.Exists(directory + image.FileName))
-                    File.WriteAllBytes(directory + image.FileName, image.Data);
+                var filePath = Path.Combine(directory, image.FileName);
+                if (!File.Exists(filePath))
+                {
+                    await File.WriteAllBytesAsync(filePath, image.Data);
+                }
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error saving files");
-            System.Console.WriteLine("Error saving files: " + ex.Message);
             return false;
         }
         return true;
     }
-    private Estate ComposeEstateFromFormData(IFormCollection formCollection)
+    private async Task<Estate> ComposeEstateFromFormData(IFormCollection formCollection)
     {
         var estate = new Estate
         {
@@ -94,7 +89,7 @@ public class EstateService : IEstateService
         {
             var index = formFile.Name.Split('[')[1].Split(']')[0];
             using var memoryStream = new MemoryStream();
-            formFile.CopyToAsync(memoryStream);
+            await formFile.CopyToAsync(memoryStream);
             var image = new Image()
             {
                 FileName = formFile.FileName,
