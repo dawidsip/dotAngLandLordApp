@@ -3,7 +3,7 @@ import { CommonModule,  } from '@angular/common';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field'; // Import MatFormFieldModule
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -28,12 +28,40 @@ import {MatRippleModule} from '@angular/material/core';
     <div class="upload-container">
       <div class="image-upload-container">
         <div class="img-group">
-          <div class="img-container"><img *ngIf="imagePreviews.length > 0" [src]="imagePreviews[0].src"/></div>
-          <div class="img-container"><img *ngIf="imagePreviews.length > 1" [src]="imagePreviews[1].src"/></div>
-          <div class="img-container"><img *ngIf="imagePreviews.length > 2" [src]="imagePreviews[2].src"/></div>
-          <div class="img-container"><img *ngIf="imagePreviews.length > 3" [src]="imagePreviews[3].src"/></div>
-          <div class="img-container"><img *ngIf="imagePreviews.length > 4" [src]="imagePreviews[4].src"/></div>
+          <div 
+            class="img-container" 
+            [class.selected]="selectedImageIndex === 0 && imagePreviews.length > 0"
+            (click)="selectImage(0)">
+            <img *ngIf="imagePreviews.length > 0" [src]="imagePreviews[0].src"/>
+          </div>
+          <div 
+            class="img-container" 
+            [class.selected]="selectedImageIndex === 1 && imagePreviews.length > 1"
+            (click)="selectImage(1)">
+            <img *ngIf="imagePreviews.length > 1" [src]="imagePreviews[1].src"/>
+          </div>
+          <div 
+            class="img-container" 
+            [class.selected]="selectedImageIndex === 2 && imagePreviews.length > 2"
+            (click)="selectImage(2)">
+            <img *ngIf="imagePreviews.length > 2" [src]="imagePreviews[2].src"/>
+          </div>
+          <div 
+            class="img-container" 
+            [class.selected]="selectedImageIndex === 3 && imagePreviews.length > 3"
+            (click)="selectImage(3)">
+            <img *ngIf="imagePreviews.length > 3" [src]="imagePreviews[3].src"/>
+          </div>
+          <div 
+            class="img-container" 
+            [class.selected]="selectedImageIndex === 4 && imagePreviews.length > 4"
+            (click)="selectImage(4)">
+            <img *ngIf="imagePreviews.length > 4" [src]="imagePreviews[4].src"/>
+          </div>
         </div>
+        <button matRipple [matRippleColor]="myColor" color="primary" type="button" (click)="onClearImagePreviews()" mat-fab extended [disabled]="!imagePreviews" aria-label="clear all images">
+          <mat-icon>delete</mat-icon>
+        </button> 
         <button matRipple [matRippleColor]="myColor" class="primary upload-button" color="primary" type="button" mat-raised-button aria-label="upload dialog" (click)="fileInput.click()">
         <input hidden (change)="onFileSelected($event)" #fileInput type="file" multiple accept="image/png, image/jpeg">
           Upload images
@@ -43,7 +71,7 @@ import {MatRippleModule} from '@angular/material/core';
     <form [formGroup]="estateForm" (ngSubmit)="onSubmit()">
       <mat-dialog-content>
         <mat-form-field>
-          <input matInput placeholder="Name" formControlName="name">
+          <input matInput placeholder="Location name" formControlName="name">
         </mat-form-field>
         <mat-form-field>
           <input matInput placeholder="City" formControlName="city">
@@ -64,7 +92,7 @@ import {MatRippleModule} from '@angular/material/core';
           <input matInput placeholder="Flat number" formControlName="flatNumber">
         </mat-form-field>
       </mat-dialog-content>
-      <mat-dialog-actions>
+      <mat-dialog-actions>        
         <button matRipple [matRippleColor]="myColor" class="primary" type="button" mat-raised-button type="submit" [disabled]="!estateForm.valid" color="primary">Create</button>
       </mat-dialog-actions>
     </form>`,
@@ -73,16 +101,31 @@ import {MatRippleModule} from '@angular/material/core';
 export class AddEstateModalComponent implements OnInit {
 
   uploadFiles: File[] = [];
-  myColor = 'rgba(177, 177, 177, 0.5)';
+  myColor = 'rgba(177, 127, 177, 0.5)';
   images: Image[] = [];
   estateForm!: FormGroup;
   estateService: EstateService = inject(EstateService);
   imagePreviews: { src: string, fileName: string }[] = [];
+  selectedImageIndex: number | null = null;
 
   constructor(
     private dialogRef: MatDialogRef<AddEstateModalComponent>,
     private fb: FormBuilder
   ) {}
+  
+  selectImage(index: number): void {
+    console.log("selectImage clicked");
+    if(index < this.imagePreviews.length )
+      this.selectedImageIndex = index;
+
+    console.log("selectImage" + this.selectedImageIndex);
+  }
+
+  onClearImagePreviews()
+  {
+    this.imagePreviews = [];
+    this.images = [];
+  }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -96,7 +139,7 @@ export class AddEstateModalComponent implements OnInit {
             id: undefined,
             estateId: undefined,
             fileName: file.name,
-            isMain: index === 0, 
+            isMain: index == this.selectedImageIndex, 
             data: data
           });
 
@@ -135,9 +178,18 @@ export class AddEstateModalComponent implements OnInit {
     });
   }
 
+  validateMainImageWasChosen() : boolean {
+    return this.images?.filter((im: Image) => im.isMain == true).length === 1;
+  }
+
   onSubmit() {
     if (this.estateForm.valid) {
       // Submit form data
+      if(!this.validateMainImageWasChosen())
+      {
+        if(this.images.length>0) this.images[0].isMain = true;
+      }
+      
       const newEstate: Estate = {
         id: 0,
         userId: '',
@@ -165,4 +217,8 @@ export class AddEstateModalComponent implements OnInit {
   onCancel() {
     this.dialogRef.close();
   }
+
+
 }
+
+
