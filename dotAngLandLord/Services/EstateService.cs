@@ -95,7 +95,7 @@ public class EstateService : IEstateService
                 FileName = formFile.FileName,
                 IsMain = bool.Parse(formCollection[$"images[{index}].isMain"]),
                 Data = memoryStream.ToArray(),
-                //Estate = estate,
+                // Estate = estate,
                 
             };
             // System.Console.WriteLine("image file name is: " + image.FileName + " index is: " + index + "IsMain is: " + image.IsMain);

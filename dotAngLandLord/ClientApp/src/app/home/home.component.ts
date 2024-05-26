@@ -7,7 +7,7 @@ import { EstateService } from '../estate.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,EstateComponent],
+  imports: [CommonModule, EstateComponent],
   template: `
   <section>
     <form>
@@ -31,10 +31,20 @@ export class HomeComponent {
 
 
   constructor() {
-    this.estateService.getAllEstates().then((estateList: Estate[]) => {
-      this.estateList = estateList;
-      this.filteredEstateList = estateList;
-    });
+    // this.estateService.getAllEstates().then((estateList: Estate[]) => {
+    //   this.estateList = estateList;
+    //   this.filteredEstateList = estateList;
+    // });
+    this.estateService.getAllEstates().subscribe({
+        next: (value: Estate[]) => {
+          this.estateList = value;
+          this.filteredEstateList = value;
+          },
+        error: (e) =>
+          {
+            console.log("Couldnt retvrieve all of the Estates." + e);
+          },
+      });
   }
   
   filterResults(text: string) {

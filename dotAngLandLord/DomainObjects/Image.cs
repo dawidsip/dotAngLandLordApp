@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using dotAngLandLord.DomainObjects;
 using Newtonsoft.Json;
 
 namespace dotAngLandLord.DomainObjects;
@@ -23,5 +22,6 @@ public class Image
 
     public byte[] Data { get; set;}
 
+    // [JsonIgnore]
     // public Estate Estate { get; set;}
 }

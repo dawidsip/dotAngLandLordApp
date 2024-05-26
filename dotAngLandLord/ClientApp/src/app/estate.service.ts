@@ -1,18 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Estate } from './estate';
+
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EstateService {
 
-  constructor() { }
-  readonly baseUrl = 'https://angular.io/assets/images/tutorials/faa';
+  constructor(private http: HttpClient) { }
+
+  // readonly baseUrl = 'https://angular.io/assets/images/tutorials/faa';
   url = 'http://localhost:5283/estate';
 
-  async getAllEstates(): Promise<Estate[]> {
-    const data = await fetch(this.url);
-    return await data.json() ?? [];
+  getAllEstates(): Observable<Estate[]> {
+    return this.http.get<Estate[]>(this.url);
+    // const data = await fetch(this.url);
+    // return await data.json() ?? [];
   }
   
   async getEstateById(id: number): Promise<Estate | undefined> {
