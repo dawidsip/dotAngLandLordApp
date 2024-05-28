@@ -39,7 +39,7 @@
   {
     margin-bottom: 20px;
   }
-  
+
   .listing-facilities li {
     font-size: 14pt;
   }
@@ -78,3 +78,33 @@
       height: 400px;
     }
   }
+
+  .mat-mdc-chip-set {
+    width: min-content;
+    max-width: min-content;
+
+  }
+
+.mat-mdc-standard-chip.mat-mdc-chip-selected.mat-primary, .mat-mdc-standard-chip.mat-mdc-chip-highlighted.mat-primary {
+  --mdc-chip-disabled-label-text-color: white;
+  --mdc-chip-elevated-container-color: hsl(262, 52%, 47%, 100%);
+  --mdc-chip-elevated-disabled-container-color: hsl(262, 52%, 47%, 100%);
+  --mdc-chip-focus-state-layer-color: white;
+  --mdc-chip-focus-state-layer-opacity: 1;
+  --mdc-chip-with-icon-icon-color: white;
+  // --mdc-chip-with-icon-disabled-icon-color: white;
+  --mdc-chip-with-icon-selected-icon-color: white;
+  --mdc-chip-with-trailing-icon-disabled-trailing-icon-color: white;
+  --mdc-chip-with-trailing-icon-trailing-icon-color: white;
+}
+
+
+::ng-deep .mat-mdc-standard-chip.mdc-evolution-chip--disabled {
+  // background-color: #673ab7 !important; /* Ensure the background color is vibrant */
+  // color: white !important;              /* Ensure the text color is white */
+  opacity: 1 !important;                /* Ensure full opacity */
+  // --mdc-chip-disabled-label-text-color: white !important;
+  // --mdc-chip-elevated-disabled-container-color: #673ab7 !important;
+  // --mdc-chip-with-icon-disabled-icon-color: white !important;
+  // --mdc-chip-with-trailing-icon-disabled-trailing-icon-color: white !important;
+}

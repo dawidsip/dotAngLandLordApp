@@ -6,6 +6,8 @@ import routeConfig from './app/app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 import { EstateService } from './app/estate.service';
+import { MAT_CHIPS_DEFAULT_OPTIONS } from '@angular/material/chips';
+
 
 bootstrapApplication(AppComponent,
   {
@@ -16,7 +18,13 @@ bootstrapApplication(AppComponent,
       provideHttpClient(),
       { 
         provide: EstateService,
-      }
+      },
+      {
+        provide: MAT_CHIPS_DEFAULT_OPTIONS,
+        useValue: {
+          separatorKeyCodes: [',', ' ']
+        }
+      },
     ]
   }
 ).catch(err => console.error(err));

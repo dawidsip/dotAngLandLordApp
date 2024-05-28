@@ -51,7 +51,7 @@ export class DashboardComponent implements OnInit {
         var est = resultEstates.map(this.mapToEstate);
         this.estateList = est;
         this.filteredEstateList = est; 
-        console.log(this.estateList);2
+        console.log(this.estateList);
       }
     }).catch((error) => {
       console.error('Failed to fetch user estates', error);
@@ -73,7 +73,7 @@ export class DashboardComponent implements OnInit {
     return {
       id: ef.facility.id,
       name: ef.facility.name,
-      isPresent: ef.facility.isPresent,
+      isPresent: ef.isPresent,
       isBasic: ef.facility.isBasic
     };
   }
