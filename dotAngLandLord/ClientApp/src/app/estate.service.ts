@@ -7,12 +7,15 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class EstateService {
-
+export class EstateService 
+{
+  selectedEstate!: Estate;
+  url = 'http://localhost:5283/estate';
+  
   constructor(private http: HttpClient) { }
 
   // readonly baseUrl = 'https://angular.io/assets/images/tutorials/faa';
-  url = 'http://localhost:5283/estate';
+  
 
   getAllEstates(): Observable<Estate[]> {
     return this.http.get<Estate[]>(this.url);

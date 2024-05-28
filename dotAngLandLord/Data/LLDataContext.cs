@@ -7,6 +7,14 @@ namespace dotAngLandLord.Data;
 
 public class LLDataContext : IdentityDbContext, ILLDataContext
 {
+
+    // public DbSet<User> Users { get; set; }
+
+    public DbSet<Estate> Estates { get; set; }
+    public DbSet<Image> Images { get; set; }
+    public DbSet<Facility> Facilities { get; set; }
+    public DbSet<EstateFacility> EstateFacilities { get; set; }
+
     public LLDataContext(DbContextOptions<LLDataContext> options)
         : base(options)
     {
@@ -18,6 +26,8 @@ public class LLDataContext : IdentityDbContext, ILLDataContext
         // modelBuilder.Entity<User>().ToTable("User"); // Singular table name
         modelBuilder.Entity<Estate>().ToTable("Estate"); // Singular table name
         modelBuilder.Entity<Image>().ToTable("Image");
+        modelBuilder.Entity<EstateFacility>().ToTable("Estate_Facility");
+        modelBuilder.Entity<Facility>().ToTable("Facility");
 
         modelBuilder.Entity<Estate>()
             .HasMany(estate => estate.Images)
@@ -25,23 +35,35 @@ public class LLDataContext : IdentityDbContext, ILLDataContext
             .HasForeignKey(i => i.EstateId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<EstateFacility>()
+            .HasKey(e => new { e.EstateId, e.FacilityId });
+
+        modelBuilder.Entity<EstateFacility>()
+            .HasOne(ef => ef.Estate)
+            .WithMany(e => e.EstateFacilities)
+            .HasForeignKey(es => es.EstateId);
+
+        modelBuilder.Entity<EstateFacility>()
+            .HasOne(ef => ef.Facility)
+            .WithMany(f => f.EstateFacilities)
+            .HasForeignKey(ff => ff.FacilityId);
+
+
+
         // modelBuilder.Entity<Image>()
         //     .HasOne(i => i.Estate)
         //     .WithMany(e => e.Images)
         //     .HasForeignKey(i => i.EstateId);
             
     }
-    // public DbSet<User> Users { get; set; }
-
-    public DbSet<Estate> Estates { get; set; }
-    public DbSet<Image> Images { get; set; }
-
 
     public async Task<List<Estate>> GetEstatesByUserIdAsync(string userId)
     {
         return await Estates
             .Where(e => e.UserId == userId)
             .Include(estate => estate.Images)
+            .Include(ef => ef.EstateFacilities)
+                .ThenInclude(f => f.Facility)
             .ToListAsync();
     }
 

@@ -7,6 +7,9 @@ import { EstateComponent } from '../estate/estate.component';
 import { Estate } from '../estate';
 import { EstateService } from '../estate.service';
 import { CreateNewEstateComponent } from '../create-new-estate/create-new-estate.component';
+import { Facility } from '../facility';
+import { Image } from '../image';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -25,6 +28,7 @@ import { CreateNewEstateComponent } from '../create-new-estate/create-new-estate
   `,
   styleUrls: ['./dashboard.component.scss']
 })
+
 export class DashboardComponent implements OnInit {
 
   public estateList: Estate[] = [];
@@ -44,14 +48,58 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.estateService.getUserEstates().then((resultEstates: Estate[] | undefined) => {
       if (resultEstates) {
-        this.estateList = resultEstates;
-        this.filteredEstateList = resultEstates; 
+        var est = resultEstates.map(this.mapToEstate);
+        this.estateList = est;
+        this.filteredEstateList = est; 
+        console.log(this.estateList);2
       }
     }).catch((error) => {
       console.error('Failed to fetch user estates', error);
       window.location.href = 'http://localhost:5283/Identity/Account/Login?returnUrl=/dashboard';
     });
   }
+
+  // private mapToImage = (img: any): Image => {
+  //   return {
+  //     id: img.id,
+  //     estateId: img.estateId,
+  //     fileName: img.fileName,
+  //     isMain: img.isMain,
+  //     data: img.data
+  //   };
+  // }
+  
+  private mapToFacility = (ef: any): Facility => {
+    return {
+      id: ef.facility.id,
+      name: ef.facility.name,
+      isPresent: ef.facility.isPresent,
+      isBasic: ef.facility.isBasic
+    };
+  }
+
+  private mapToEstate = (data: any): Estate => {
+    // console.log("is facilities an array?: "+ Array.isArray(data.estateFacilities));
+    // data.estateFacilities.forEach((ef: any) => console.log(ef.facility));
+    // console.log("break");
+    // console.log(data);
+    // console.log(data.images);
+    return {
+      id: data.id,
+      userId: data.userId,
+      name: data.name,
+      city: data.city,
+      region: data.region,
+      country: data.country,
+      streetName: data.streetName, 
+      streetNumber: data.streetNumber,
+      flatNumber: data.flatNumber,
+      createdOn: new Date(data.createdOn),
+      facilities: Array.isArray(data.estateFacilities) ? data.estateFacilities?.map(this.mapToFacility) : [],
+      images: data.images,
+      
+      };
+    }
 
   filterResults(text: string) {
     if (!text) {

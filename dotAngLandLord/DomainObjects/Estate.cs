@@ -38,4 +38,8 @@ public class Estate
 
     [JsonProperty("images")]
     public ICollection<Image> Images { get; set; } = new List<Image>();
+    
+    [JsonIgnore]
+    [JsonProperty("estateFacilities")]
+    public ICollection<EstateFacility> EstateFacilities { get; set; } = new List<EstateFacility>();
 }

@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { EstateService } from '../estate.service';
 import { Estate } from '../estate';
 import { Image } from '../image';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Facility } from '../facility';
 
 @Component({
   selector: 'app-details',
@@ -26,65 +27,38 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
         <li>Does this location have laundry: {{estate?.streetNumber}}</li>
       </ul>
     </section>
-    <section class="listing-apply">
-      <h2 class="section-heading">Apply now to live here</h2>
-      <form [formGroup]="applyForm" (submit)="submitApplication()">
-        <label for="first-name">First Name</label>
-        <input id="first-name" type="text" formControlName="firstName">
-
-        <label for="last-name">Last Name</label>
-        <input id="last-name" type="text" formControlName="lastName">
-
-        <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email">
-        <button type="submit" class="primary">Apply now</button>
-      </form>
+    <section class="listing-facilities">
+      <h2 class="section-heading">Facilities</h2>
+      <ul>
+        <li *ngFor="let facility of facilities">{{facility.name}}, is present: {{facility.isPresent}}</li>
+      </ul>
     </section>
   </article>
 `,
 styleUrl: './details.component.scss'
 })
 
-export class DetailsComponent {
-
+export class DetailsComponent implements OnInit {
   
   route: ActivatedRoute = inject(ActivatedRoute);
   estateService = inject(EstateService);
   estate!: Estate | undefined;
   mainImage: Image | undefined = this.estate?.images?.find((image) => image.isMain === true);
+  facilities: Facility[] = [];
+    // Id = 0;
+  constructor() { }
+  ngOnInit(): void {
+    this.estate = this.estateService.selectedEstate;
 
-  applyForm = new FormGroup({
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
-    email: new FormControl('')
-  });
-  // constructor() {
-  //   const estateId = Number(this.route.snapshot.params['id']);
-  //   this.estate = this.estateService.getEstateById(estateId);
-  // }
+    if (this.estate) {
+      this.mainImage = this.estate.images?.find(image => image.isMain === true);
+      this.facilities = this.estate.facilities || [];
+    } else {
+      console.error('No estate selected');
+    }
 
-  constructor() {
-    const Id = parseInt(this.route.snapshot.params['id'], 10);
-    this.estateService.getEstateById(Id).then(estate => {
-      this.estate = estate;
-    });
+    console.log(this.estate === null);
   }
 
-  // this.route.queryParamMap.subscribe(params => {
-  //   const userIdStr = params.get('userid'); // Get the 'userid' query parameter as a string
-  //   if (userIdStr) {
-  //     const userId = parseInt(userIdStr, 10); // Convert it to an integer
-  //     this.estateService.getEstatesByUserId(userId).then(estate => {
-  //       this.estate = estate;
-  //     });
-  //   }
-  // });
 
-  submitApplication() {
-    this.estateService.submitApplication(
-      this.applyForm.value.firstName ?? '',
-      this.applyForm.value.lastName ?? '',
-      this.applyForm.value.email ?? ''
-    );
-  }
 }

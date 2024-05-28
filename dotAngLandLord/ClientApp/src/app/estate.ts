@@ -13,5 +13,5 @@ import { Facility } from "./facility";
     flatNumber?: string;
     createdOn: Date;
     images: Image[];
-    // facilities: Facility[];
+    facilities: Facility[];
 }

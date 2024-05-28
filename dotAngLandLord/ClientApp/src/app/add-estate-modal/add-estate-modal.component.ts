@@ -202,6 +202,7 @@ export class AddEstateModalComponent implements OnInit {
         flatNumber: this.estateForm.value.flatNumber,
         createdOn: new Date(),
         images: this.images ?? [],
+        facilities: [],
       };
       console.log("we have this many images : " + newEstate.images.length);
       this.estateService.postNewEstate(newEstate).then((persistedEstate: Estate | undefined) => {

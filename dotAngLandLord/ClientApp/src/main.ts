@@ -5,6 +5,7 @@ import { provideRouter } from '@angular/router';
 import routeConfig from './app/app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
+import { EstateService } from './app/estate.service';
 
 bootstrapApplication(AppComponent,
   {
@@ -13,6 +14,9 @@ bootstrapApplication(AppComponent,
       provideRouter(routeConfig),
       provideAnimations(),
       provideHttpClient(),
+      { 
+        provide: EstateService,
+      }
     ]
   }
 ).catch(err => console.error(err));

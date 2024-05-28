@@ -1,15 +1,24 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+
 namespace dotAngLandLord.DomainObjects;
 
 public class Facility
 {
-    public int id { get; set; }
-    public string Name { get; set; }
-    public bool IsPresent { get; set; }
-}
+    [JsonProperty("id")]
+    public int Id { get; set; }
 
-public class EstateFacility
-{
-    public int EstateId { get; set;}
-    public int FacilityId { get; set;}
+    [JsonProperty("name")]
+    public string Name { get; set; }
+
+    [NotMapped]
+    [JsonProperty("isPresent")]
+    public bool IsPresent { get; set; }
+    
+    [JsonProperty("isBasic")]
     public bool IsBasic { get; set; }
+
+    [System.Text.Json.Serialization.JsonIgnore]
+    public ICollection<EstateFacility> EstateFacilities {get; set;}
 }
