@@ -12,11 +12,15 @@ import { Image } from '../image';
 import { EstateService } from '../estate.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatRippleModule} from '@angular/material/core';
+import { Facility } from '../facility';
+import {MatChipEditedEvent, MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-add-estate-modal',
   standalone: true,
-  imports: [ CommonModule, MatDialogModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatIconModule, MatRippleModule],
+  imports: [ CommonModule, MatDialogModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatIconModule, MatRippleModule, MatChipsModule],
   template: `
     <div mat-dialog-title class="dialog-title">
 
@@ -91,13 +95,44 @@ import {MatRippleModule} from '@angular/material/core';
         <mat-form-field>
           <input matInput placeholder="Flat number" formControlName="flatNumber">
         </mat-form-field>
+        <form>
+          <mat-form-field appearance="fill" class="facilities-chips">
+            <mat-label>Facilities for your new location:</mat-label>
+            <mat-chip-grid class="mat-mdc-chip-set-stacked" #chipGrid aria-label="Enter facility">
+              @for (bfs of basicFacilities; track bfs) {
+                <mat-chip-option
+                  (removed)="remove(bfs)"
+                  [aria-description]="'press enter to edit ' + bfs.name"
+                >
+                  {{bfs.name}}
+                  <button matChipRemove [attr.aria-label]="'remove ' + bfs.name">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-option>
+              }
+              <input class="mat-mdc-chip-input"
+                matInput
+                value="+ Add facility"
+                placeholder="Enter custom facility..."
+                [matChipInputFor]="chipGrid"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add($event)"
+                (focus)="onFocus($event)"
+              />
+            </mat-chip-grid>
+          </mat-form-field>
+        </form>
       </mat-dialog-content>
       <mat-dialog-actions>        
+        <button matRipple [matRippleColor]="myColor" mat-dialog-close (click)="onCancel()" class="primary" type="button" mat-raised-button color="primary">Cancel</button>
         <button matRipple [matRippleColor]="myColor" class="primary" type="button" mat-raised-button type="submit" [disabled]="!estateForm.valid" color="primary">Create</button>
       </mat-dialog-actions>
-    </form>`,
+    </form>
+  `,
   styleUrl: './add-estate-modal.component.scss'
 })
+
 export class AddEstateModalComponent implements OnInit {
 
   uploadFiles: File[] = [];
@@ -107,7 +142,10 @@ export class AddEstateModalComponent implements OnInit {
   estateService: EstateService = inject(EstateService);
   imagePreviews: { src: string, fileName: string }[] = [];
   selectedImageIndex: number | null = null;
-
+  basicFacilities: Facility[] | null = null;
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  announcer = inject(LiveAnnouncer);
   constructor(
     private dialogRef: MatDialogRef<AddEstateModalComponent>,
     private fb: FormBuilder
@@ -164,6 +202,16 @@ export class AddEstateModalComponent implements OnInit {
   
   ngOnInit() {
     this.createForm();
+    this.estateService.FetchBasicFacilities().subscribe({
+      next: (value: Facility[]) => {
+        console.log(value);
+        this.basicFacilities = value;
+        },
+      error: (e) =>
+        {
+          console.log("Couldnt retvrieve basic facilities." + e);
+        },
+    });
   }
 
   createForm() {
@@ -219,7 +267,32 @@ export class AddEstateModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  onFocus(event: FocusEvent) {
+    const inputElement = event.target as HTMLInputElement;
+    inputElement.value = '';
+  }
+  add(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = (event.value || '').trim();
 
+    if (value) {
+      this.basicFacilities?.push({id: undefined, name: value, isPresent: true, isBasic: false});
+    }
+    event.chipInput!.clear();
+
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  remove(facility: Facility): void {
+    if(this.basicFacilities != undefined){
+      const index = this.basicFacilities?.indexOf(facility);
+      if (index >= 0) {
+        this.basicFacilities?.splice(index, 1);
+
+        this.announcer.announce(`Removed ${facility}`);
+      }
+    }
+  }
 }
-
-

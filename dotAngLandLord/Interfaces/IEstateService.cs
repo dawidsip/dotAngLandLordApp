@@ -10,5 +10,7 @@ public interface IEstateService
 
     Task<Estate> AddNewEstate(IFormCollection formCollection, string userId);
     Task<Estate> GetById(int id, string userId);
+
+    Task<IEnumerable<Facility>> GetFacilities(string facilitiestype);
     
 }

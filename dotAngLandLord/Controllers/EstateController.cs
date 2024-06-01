@@ -131,6 +131,16 @@ public class EstateController : ControllerBase
         return Ok(estate);
     }
 
+    [Authorize]
+    [HttpGet("facilitiestype")]
+    public async Task<IActionResult> GetFacilities(string facilitiestype)
+    {
+        System.Console.WriteLine("inside GetFacilities with facilitiestype");
+
+        var facilities = await _estateService.GetFacilities(facilitiestype);
+        
+        return Ok(facilities);
+    }
     // [HttpGet("userid")]
     // public async Task<IEnumerable<Estate>> GetByUserId(string userid)
     // {

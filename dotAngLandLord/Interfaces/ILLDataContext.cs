@@ -10,6 +10,8 @@ public interface ILLDataContext
     public Task<List<Estate>> GetEstatesByUserIdAsync(string userId);
 
     public Task<Estate> GetEstateByIdAsync(int id);
+
+    public Task<List<Facility>> GetBasicFacilities();
     // Other members if needed
     public Task<int> SaveChangesAsync();
 }

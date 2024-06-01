@@ -32,6 +32,15 @@ public class EstateService : IEstateService
         return await _context.GetEstatesByUserIdAsync(userId);
     }
 
+    public async Task<IEnumerable<Facility>> GetFacilities(string facilitiestype)
+    {
+        System.Console.WriteLine("GetFacilities actuated with type: ", facilitiestype);
+        return facilitiestype.ToLower() switch{
+                "basic" => await _context.GetBasicFacilities(),
+                "all" => null, 
+                };
+    }
+
     public async Task<Estate?> AddNewEstate(IFormCollection formCollection, string userId)
     {  
         var newEstate = await ComposeEstateFromFormData(formCollection);
@@ -116,4 +125,6 @@ public class EstateService : IEstateService
         }
         return true;
     }
+
+
 }

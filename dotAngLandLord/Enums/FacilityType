@@ -1,0 +1,6 @@
+namespace dotAngLandLord.Enums;
+public enum FacilityType{
+    Custom = 0,
+    Basic = 1,
+    All= 2,
+}

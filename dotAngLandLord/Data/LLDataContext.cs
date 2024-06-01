@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using dotAngLandLord.Interfaces;
 using dotAngLandLord.DomainObjects;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using NuGet.Protocol;
+// using dotAngLandLord.Enums;
 
 namespace dotAngLandLord.Data;
 
@@ -48,7 +50,8 @@ public class LLDataContext : IdentityDbContext, ILLDataContext
             .WithMany(f => f.EstateFacilities)
             .HasForeignKey(ff => ff.FacilityId);
 
-
+        modelBuilder.Entity<Facility>()
+            .HasKey(f => f.Id);
 
         // modelBuilder.Entity<Image>()
         //     .HasOne(i => i.Estate)
@@ -74,6 +77,24 @@ public class LLDataContext : IdentityDbContext, ILLDataContext
             .Include(ef => ef.EstateFacilities)
                 .ThenInclude(f => f.Facility)
             .FirstAsync(e => e.Id == id);
+    }
+
+    public async Task<List<Facility>> GetBasicFacilities()
+    {
+        var basics = await Facilities
+            .Where(f => f.IsBasic == true)
+            .Select(f => new Facility
+            {
+                Id = f.Id,
+                Name = f.Name,
+                IsBasic = f.IsBasic,
+                IsPresent = true // Setting IsPresent to true
+            })
+            .ToListAsync();
+
+        basics.ForEach(f =>System.Console.WriteLine(f.Name+", is basik: "+f.IsBasic));
+
+        return basics;
     }
 
     public Task<int> SaveChangesAsync()

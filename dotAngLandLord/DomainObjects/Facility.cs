@@ -13,6 +13,7 @@ public class Facility
     public string Name { get; set; }
 
     [NotMapped]
+    // [System.Text.Json.Serialization.JsonIgnore]
     [JsonProperty("isPresent")]
     public bool IsPresent { get; set; }
     

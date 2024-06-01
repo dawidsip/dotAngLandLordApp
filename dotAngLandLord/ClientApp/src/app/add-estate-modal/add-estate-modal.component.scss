@@ -73,3 +73,29 @@
         }
         
 }
+
+.facilities-chips
+{
+    width: 50%;
+    padding-top: 24px;
+    padding-bottom: 8px;
+}
+.facilities-chips.mat-mdc-text-field-wrapper
+{
+    padding-top: 44px;
+    padding-bottom: 24px;
+}
+.mat-mdc-chip-set-stacked {
+    padding-top: 33px;
+    // padding-bottom: 30px;
+}
+.mat-mdc-input-element{
+    padding-top: 24px;
+}
+md-input-container:not( .md-input-has-value ) input:not( :focus ):-ms-input-placeholder {
+    color: #9e0606
+  }
+
+.mat-mdc-chip-input {
+color: #9e0606
+}

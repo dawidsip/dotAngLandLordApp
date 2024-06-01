@@ -49,12 +49,21 @@ export class EstateService
       
       };
   }
+
+  
   getAllEstates(): Observable<Estate[]> {
     return this.http.get<Estate[]>(this.url);
     // const data = await fetch(this.url);
     // return await data.json() ?? [];
   }
   
+  FetchBasicFacilities(): Observable<Facility[]> {
+    const httpOptions = {
+      withCredentials: true, // Include credentials
+    };
+    return this.http.get<Facility[]>(`${this.url}/facilitiestype?facilitiestype=basic`, httpOptions);
+  }
+
   async getEstateById(id: number): Promise<Estate | undefined> {
     const data = await fetch(`${this.url}/id?id=${id}`, {
       method: 'GET',
@@ -135,7 +144,6 @@ export class EstateService
     }
   }
   
-
   // async postNewEstate(newEstate: Estate): Promise<Estate | undefined> {
   //   const data = await fetch(this.url, {
   //     method: 'POST',

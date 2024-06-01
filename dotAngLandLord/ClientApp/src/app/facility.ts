@@ -1,5 +1,5 @@
 export interface Facility {
-    id: number;
+    id: number | undefined;
     name: string;
     isPresent : boolean;
     isBasic: boolean;
