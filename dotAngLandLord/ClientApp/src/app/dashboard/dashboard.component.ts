@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.estateService.getUserEstates().then((resultEstates: Estate[] | undefined) => {
       if (resultEstates) {
-        var est = resultEstates.map(this.mapToEstate);
+        var est = resultEstates.map(this.estateService.mapToEstate);
         this.estateList = est;
         this.filteredEstateList = est; 
         console.log(this.estateList);
@@ -69,37 +69,37 @@ export class DashboardComponent implements OnInit {
   //   };
   // }
   
-  private mapToFacility = (ef: any): Facility => {
-    return {
-      id: ef.facility.id,
-      name: ef.facility.name,
-      isPresent: ef.isPresent,
-      isBasic: ef.facility.isBasic
-    };
-  }
+  // private mapToFacility = (ef: any): Facility => {
+  //   return {
+  //     id: ef.facility.id,
+  //     name: ef.facility.name,
+  //     isPresent: ef.isPresent,
+  //     isBasic: ef.facility.isBasic
+  //   };
+  // }
 
-  private mapToEstate = (data: any): Estate => {
-    // console.log("is facilities an array?: "+ Array.isArray(data.estateFacilities));
-    // data.estateFacilities.forEach((ef: any) => console.log(ef.facility));
-    // console.log("break");
-    // console.log(data);
-    // console.log(data.images);
-    return {
-      id: data.id,
-      userId: data.userId,
-      name: data.name,
-      city: data.city,
-      region: data.region,
-      country: data.country,
-      streetName: data.streetName, 
-      streetNumber: data.streetNumber,
-      flatNumber: data.flatNumber,
-      createdOn: new Date(data.createdOn),
-      facilities: Array.isArray(data.estateFacilities) ? data.estateFacilities?.map(this.mapToFacility) : [],
-      images: data.images,
+  // private mapToEstate = (data: any): Estate => {
+  //   // console.log("is facilities an array?: "+ Array.isArray(data.estateFacilities));
+  //   // data.estateFacilities.forEach((ef: any) => console.log(ef.facility));
+  //   // console.log("break");
+  //   // console.log(data);
+  //   // console.log(data.images);
+  //   return {
+  //     id: data.id,
+  //     userId: data.userId,
+  //     name: data.name,
+  //     city: data.city,
+  //     region: data.region,
+  //     country: data.country,
+  //     streetName: data.streetName, 
+  //     streetNumber: data.streetNumber,
+  //     flatNumber: data.flatNumber,
+  //     createdOn: new Date(data.createdOn),
+  //     facilities: Array.isArray(data.estateFacilities) ? data.estateFacilities?.map(this.mapToFacility) : [],
+  //     images: data.images,
       
-      };
-    }
+  //     };
+  //   }
 
   filterResults(text: string) {
     if (!text) {

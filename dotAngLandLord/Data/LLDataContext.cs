@@ -71,6 +71,8 @@ public class LLDataContext : IdentityDbContext, ILLDataContext
     {
         return await Estates
             .Include(estate => estate.Images)
+            .Include(ef => ef.EstateFacilities)
+                .ThenInclude(f => f.Facility)
             .FirstAsync(e => e.Id == id);
     }
 

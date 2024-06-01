@@ -4,10 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { EstateService } from '../estate.service';
 import { Estate } from '../estate';
 import { Image } from '../image';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Facility } from '../facility';
 import { MatChipsModule } from '@angular/material/chips';
-
 
 @Component({
   selector: 'app-details',
@@ -40,7 +39,7 @@ import { MatChipsModule } from '@angular/material/chips';
 styleUrl: './details.component.scss'
 })
 
-export class DetailsComponent {
+export class DetailsComponent implements OnInit{
   
   myColor = 'rgba(107,231,177,0.9)';
   route: ActivatedRoute = inject(ActivatedRoute);
@@ -49,18 +48,18 @@ export class DetailsComponent {
   mainImage: Image | undefined = this.estate?.images?.find((image) => image.isMain === true);
   facilities: Facility[] = [];
     // Id = 0;
-  constructor() { this.ngOnInit(); }
+  constructor() { }
 
   ngOnInit(): void {
-    this.estate = this.estateService.selectedEstate;
-
-    if (this.estate) {
-      this.mainImage = this.estate.images?.find(image => image.isMain === true);
-      this.facilities = this.estate.facilities ?? [];
-    } else {
-      console.error('No estate selected');
-    }
-
-    console.log(this.estate === null);
+    const Id = parseInt(this.route.snapshot.params['id'], 10);
+    this.estateService.getEstateById(Id).then(response => {
+      this.estate = this.estateService.mapToEstate(response);
+      if (this.estate) {
+        this.mainImage = this.estate.images?.find(image => image.isMain === true);
+        this.facilities = this.estate.facilities ?? [];
+      } else {
+        console.error('No estate selected');
+      }
+    });
   }
 }

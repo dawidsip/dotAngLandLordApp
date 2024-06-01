@@ -33,7 +33,6 @@ public class EstateController : ControllerBase
         System.Console.WriteLine("Entered GetUsersEstates");
         var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         Console.WriteLine("user ID is: " + userId);
-        // userId = userId is not null ? "2" : null;
         if (string.IsNullOrEmpty(userId))
         {
             return Unauthorized("User ID not found in claims.");
@@ -111,15 +110,30 @@ public class EstateController : ControllerBase
     //     }
     // }
 
+    [Authorize]
     [HttpGet("id")]
-    public async Task<Estate> GetById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        return await _estateService.GetById(id);
+        var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Console.WriteLine("user ID is: " + userId);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("User ID not found in claims.");
+        }
+
+        var estate = await _estateService.GetById(id, userId);
+
+        if (estate == null)
+        {
+            return NotFound($"No estate found for user ID: {userId}");
+        }
+        
+        return Ok(estate);
     }
 
-    [HttpGet("userid")]
-    public async Task<IEnumerable<Estate>> GetByUserId(string userid)
-    {
-        return await _estateService.GetByUserId(userid);
-    }
+    // [HttpGet("userid")]
+    // public async Task<IEnumerable<Estate>> GetByUserId(string userid)
+    // {
+    //     return await _estateService.GetByUserId(userid);
+    // }
 }

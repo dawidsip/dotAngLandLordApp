@@ -21,8 +21,9 @@ public class EstateService : IEstateService
         return _context.Estates.ToList();
     }
 
-    public async Task<Estate> GetById(int id)
+    public async Task<Estate> GetById(int id, string userId)
     {
+        System.Console.WriteLine("GetBtId actuated with userId: ", userId);
         return await _context.GetEstateByIdAsync(id);
     }
 
@@ -45,31 +46,6 @@ public class EstateService : IEstateService
         return null;
     }
 
-    private async Task<bool> SaveFiles(IEnumerable<Image> images, string directory = "wwwroot/UserImages/")
-    {
-        if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
-
-        try
-        {
-            foreach (var image in images)
-            {
-                var filePath = Path.Combine(directory, image.FileName);
-                if (!File.Exists(filePath))
-                {
-                    await File.WriteAllBytesAsync(filePath, image.Data);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error saving files");
-            return false;
-        }
-        return true;
-    }
     private async Task<Estate> ComposeEstateFromFormData(IFormCollection formCollection)
     {
         var estate = new Estate
@@ -113,5 +89,31 @@ public class EstateService : IEstateService
         }
 
         return estate;
+    }
+
+    private async Task<bool> SaveFiles(IEnumerable<Image> images, string directory = "wwwroot/UserImages/")
+    {
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        try
+        {
+            foreach (var image in images)
+            {
+                var filePath = Path.Combine(directory, image.FileName);
+                if (!File.Exists(filePath))
+                {
+                    await File.WriteAllBytesAsync(filePath, image.Data);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error saving files");
+            return false;
+        }
+        return true;
     }
 }

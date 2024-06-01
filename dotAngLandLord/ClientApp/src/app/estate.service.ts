@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Estate } from './estate';
 
 import { Observable } from 'rxjs';
+import { Facility } from './facility';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +12,43 @@ export class EstateService
 {
   selectedEstate!: Estate;
   url = 'http://localhost:5283/estate';
-  
+
   constructor(private http: HttpClient) { }
 
   // readonly baseUrl = 'https://angular.io/assets/images/tutorials/faa';
   
+  
+  private mapToFacility = (ef: any): Facility => {
+    return {
+      id: ef.facility.id,
+      name: ef.facility.name,
+      isPresent: ef.isPresent,
+      isBasic: ef.facility.isBasic
+    };
+  }
 
+  mapToEstate = (data: any): Estate => {
+    // console.log("is facilities an array?: "+ Array.isArray(data.estateFacilities));
+    // data.estateFacilities.forEach((ef: any) => console.log(ef.facility));
+    // console.log("break");
+    // console.log(data);
+    // console.log(data.images);
+    return {
+      id: data.id,
+      userId: data.userId,
+      name: data.name,
+      city: data.city,
+      region: data.region,
+      country: data.country,
+      streetName: data.streetName, 
+      streetNumber: data.streetNumber,
+      flatNumber: data.flatNumber,
+      createdOn: new Date(data.createdOn),
+      facilities: Array.isArray(data.estateFacilities) ? data.estateFacilities?.map(this.mapToFacility) : [],
+      images: data.images,
+      
+      };
+  }
   getAllEstates(): Observable<Estate[]> {
     return this.http.get<Estate[]>(this.url);
     // const data = await fetch(this.url);
@@ -24,7 +56,15 @@ export class EstateService
   }
   
   async getEstateById(id: number): Promise<Estate | undefined> {
-    const data = await fetch(`${this.url}/id?id=${id}`);
+    const data = await fetch(`${this.url}/id?id=${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+
+    // const data = await fetch(`${this.url}/id?id=${id}`);
     return await data.json() ?? {};
   }
 

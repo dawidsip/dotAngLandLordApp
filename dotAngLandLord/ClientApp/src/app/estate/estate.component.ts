@@ -32,8 +32,8 @@ export class EstateComponent {
   }
 
   selectEstate() {
-    console.log("clicked");
-    console.log(this.estate);
-    this.estateService.selectedEstate = this.estate;
+    // console.log("clicked");
+    // console.log(this.estate);
+    // this.estateService.selectedEstate = this.estate;
   }
 }
