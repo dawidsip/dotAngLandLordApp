@@ -123,7 +123,22 @@ export class EstateService
       }
 
     });
-  
+
+    // Add facilities to formData
+    newEstate.facilities?.forEach((facility, index) => {
+      console.log(`Appending facility: ${JSON.stringify(facility)}`);
+
+      if (facility.id !== undefined) {
+        formData.append(`facilities[${index}].id`, String(facility.id));
+      }
+      if (facility.name !== undefined) {
+        formData.append(`facilities[${index}].name`, String(facility.name));
+      }
+      formData.append(`facilities[${index}].isPresent`, facility.isPresent ? 'true' : 'false');
+      formData.append(`facilities[${index}].isBasic`, facility.isBasic ? 'true' : 'false');
+
+
+    });
       // Debugging the formData
       formData.forEach((value, key) => {
         console.log(key, value);

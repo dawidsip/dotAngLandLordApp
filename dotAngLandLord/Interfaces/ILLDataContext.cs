@@ -6,6 +6,7 @@ public interface ILLDataContext
 {
     // DbSet<User> Users { get;  }
     DbSet<Estate> Estates { get; }
+    DbSet<Facility> Facilities { get; }
 
     public Task<List<Estate>> GetEstatesByUserIdAsync(string userId);
 

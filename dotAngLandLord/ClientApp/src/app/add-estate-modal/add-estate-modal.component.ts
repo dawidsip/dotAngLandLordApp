@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { CommonModule,  } from '@angular/common';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -13,7 +13,7 @@ import { EstateService } from '../estate.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatRippleModule} from '@angular/material/core';
 import { Facility } from '../facility';
-import {MatChipEditedEvent, MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import {MatChipEditedEvent, MatChipInputEvent, MatChipOption, MatChipsModule} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 
@@ -126,6 +126,7 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
       </mat-dialog-content>
       <mat-dialog-actions>        
         <button matRipple [matRippleColor]="myColor" mat-dialog-close (click)="onCancel()" class="primary" type="button" mat-raised-button color="primary">Cancel</button>
+        &nbsp;
         <button matRipple [matRippleColor]="myColor" class="primary" type="button" mat-raised-button type="submit" [disabled]="!estateForm.valid" color="primary">Create</button>
       </mat-dialog-actions>
     </form>
@@ -133,7 +134,7 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
   styleUrl: './add-estate-modal.component.scss'
 })
 
-export class AddEstateModalComponent implements OnInit {
+export class AddEstateModalComponent implements OnInit, AfterViewInit {
 
   uploadFiles: File[] = [];
   myColor = 'rgba(177, 127, 177, 0.5)';
@@ -146,6 +147,9 @@ export class AddEstateModalComponent implements OnInit {
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   announcer = inject(LiveAnnouncer);
+
+  @ViewChildren(MatChipOption) chipOption!: QueryList<MatChipOption>;
+
   constructor(
     private dialogRef: MatDialogRef<AddEstateModalComponent>,
     private fb: FormBuilder
@@ -250,9 +254,10 @@ export class AddEstateModalComponent implements OnInit {
         flatNumber: this.estateForm.value.flatNumber,
         createdOn: new Date(),
         images: this.images ?? [],
-        facilities: [],
+        facilities: this.extractFacilities(),
       };
-      console.log("we have this many images : " + newEstate.images.length);
+      // console.log("we have this many images : " + newEstate.images.length);
+      console.log("we have this many facilities : " + newEstate.facilities.length);
       this.estateService.postNewEstate(newEstate).then((persistedEstate: Estate | undefined) => {
         // console.log(persistedEstate);
         this.dialogRef.close(persistedEstate);
@@ -265,12 +270,34 @@ export class AddEstateModalComponent implements OnInit {
 
   onCancel() {
     this.dialogRef.close();
+    this.extractFacilities();
+  }
+
+  extractFacilities(): Facility[] {
+    const facilities: Facility[] = [];
+    this.chipOption.forEach(chip => {
+      // console.log("chip name is: " + chip.value + " and selected is: " + chip.selected);
+
+      var basicChip = this.basicFacilities?.find(f => f.name == chip.value)
+      if(basicChip)
+      {
+        facilities.push({id: basicChip.id, name: basicChip.name, isPresent: chip.selected, isBasic: true});
+      }
+      else
+      {
+        facilities.push({id: undefined, name: chip.value, isPresent: chip.selected, isBasic: false});
+      }
+
+    });
+    
+    return facilities;
   }
 
   onFocus(event: FocusEvent) {
     const inputElement = event.target as HTMLInputElement;
     inputElement.value = '';
   }
+
   add(event: MatChipInputEvent): void {
     const input = event.input;
     const value = (event.value || '').trim();
@@ -294,5 +321,9 @@ export class AddEstateModalComponent implements OnInit {
         this.announcer.announce(`Removed ${facility}`);
       }
     }
+  }
+
+  ngAfterViewInit() {
+    // Detect changes if necessary
   }
 }

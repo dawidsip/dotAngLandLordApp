@@ -33,8 +33,8 @@ export class CreateNewEstateComponent implements OnInit{
 
     
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed and the result is: ');
-      console.log(result);
+      // console.log('The dialog was closed and the result is: ');
+      // console.log(result);
       if(result)
         this.estateCreated.emit(result);
     });
