@@ -58,8 +58,6 @@ public class EstateService : IEstateService
 
     private async Task<Estate> ComposeEstateFromFormData(IFormCollection formCollection)
     {
-        // System.Console.WriteLine(formCollection["facilities[0].name"]);
-        // return new Estate();
         var estate = new Estate
         {
             Name = formCollection["name"],
@@ -101,15 +99,9 @@ public class EstateService : IEstateService
             estate.Images.Add(image);
         }
 
-        // foreach (var key in formCollection.Keys)
-        //     {
-        //         System.Console.WriteLine($"Key: {key}, Value: {formCollection[key]}");
-        //     }
-//         foreach (var key in formCollection.Keys)
-// {
-//     Console.WriteLine($"Key: {key}, Value: {formCollection[key]}");
-// }
 
+        var facilitiesToAdd = new List<Facility>();
+        var estateFacilities = new List<EstateFacility>();
         int idx = 0;
         while (formCollection.ContainsKey($"facilities[{idx}].name"))
         {
@@ -118,60 +110,31 @@ public class EstateService : IEstateService
             bool isBasic = bool.Parse(formCollection[$"facilities[{idx}].isBasic"]);
             bool isPresent = bool.Parse(formCollection[$"facilities[{idx}].isPresent"]);
 
-            Facility facility;
+            Facility facility = await _context.Facilities
+                                            .FirstOrDefaultAsync(f => f.Name == facilityName && f.IsBasic == isBasic);
 
-            if (isBasic)
+            if (facility == null && facilityName != null)
             {
-                facility = await _context.Facilities.FirstAsync(f => f.Name == facilityName && f.IsBasic == isBasic);
-                if (facility != null)
-                {
-                    estate.EstateFacilities.Add(new EstateFacility
-                    {
-                        IsPresent = isPresent,
-                    });
-                }
+                facility = new Facility { Name = facilityName, IsBasic = false };
+                facilitiesToAdd.Add(facility);
             }
-            else
-            {
-                // new facility
-                facility = new Facility { Name = facilityName, IsBasic = isBasic, IsPresent = isPresent };
-                _context.Facilities.Add(facility); 
 
-                estate.EstateFacilities.Add(new EstateFacility
-                {
-                    IsPresent = isPresent,
-                    Facility = facility
-                });
-            }
+            estateFacilities.Add(new EstateFacility
+            {
+                IsPresent = isPresent,
+                Facility = facility
+            });
 
             idx++;
         }
 
-        // int facilityCount = formCollection.Keys.Count(k => k.StartsWith("facilities[") && k.EndsWith("].name"));
-        // System.Console.WriteLine("facility count is: " + facilityCount);
+        if (facilitiesToAdd.Any())
+        {
+            await _context.Facilities.AddRangeAsync(facilitiesToAdd);
+            await _context.SaveChangesAsync();
+        }
 
-        // for (int i = 0; i < facilityCount; i++)
-        // {
-            
-        //     string facilityIndex = i.ToString();
-            
-        //     System.Console.WriteLine("facility name is: " + formCollection[$"facilities[{facilityIndex}].name"]);
-        //     var facility = new Facility
-        //     {
-        //         Name = formCollection[$"facilities[{facilityIndex}].name"],
-        //         IsBasic = bool.Parse(formCollection[$"facilities[{facilityIndex}].isBasic"]),
-        //         IsPresent = bool.Parse(formCollection[$"facilities[{facilityIndex}].isPresent"]),
-        //     };
-
-        //     var estateFacility = new EstateFacility
-        //     {
-        //         IsPresent = facility.IsPresent,
-        //         Facility = facility
-        //     };
-
-        //     estate.EstateFacilities.Add(estateFacility);
-        // }
-
+        estate.EstateFacilities = estateFacilities;
         return estate;
     }
 
@@ -200,6 +163,4 @@ public class EstateService : IEstateService
         }
         return true;
     }
-
-
 }
