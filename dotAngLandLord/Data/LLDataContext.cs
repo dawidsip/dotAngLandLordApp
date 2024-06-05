@@ -3,6 +3,7 @@ using dotAngLandLord.Interfaces;
 using dotAngLandLord.DomainObjects;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using NuGet.Protocol;
+using System.Linq;
 
 // using dotAngLandLord.Enums;
 
@@ -84,22 +85,12 @@ public class LLDataContext : IdentityDbContext, ILLDataContext
     {
         var basics = await Facilities
             .Where(f => f.IsBasic == true)
-            .Select(f => new Facility
-            {
-                Id = f.Id,
-                Name = f.Name,
-                IsBasic = f.IsBasic,
-                IsPresent = true // Setting IsPresent to true
-            })
             .ToListAsync();
 
-        basics.ForEach(f =>System.Console.WriteLine(f.Name+", is basik: "+f.IsBasic));
-
+        basics.ForEach(f => f.IsPresent = true);
+        // basics.ForEach(f =>System.Console.WriteLine(f.Name+", is basik: "+f.IsBasic));
         return basics;
     }
 
-    public Task<int> SaveChangesAsync()
-    {
-        return base.SaveChangesAsync();
-    }
+    public Task<int> SaveChangesAsync() => base.SaveChangesAsync();
 }

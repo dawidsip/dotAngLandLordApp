@@ -14,7 +14,7 @@ import { MatChipsModule } from '@angular/material/chips';
   imports: [ReactiveFormsModule, CommonModule, MatChipsModule],
   template: `
     <article>
-      <img class="listing-photo" *ngIf="mainImage" [src]="mainImage"
+      <img class="listing-photo" *ngIf="mainImage" [src]="'http://localhost:5283/UserImages/' + mainImage.fileName"
         alt="Exterior photo of {{estate?.name}}"/>
       <section class="listing-description">
         <h2 class="listing-heading">{{estate?.name}}</h2>

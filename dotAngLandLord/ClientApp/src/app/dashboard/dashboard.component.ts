@@ -54,7 +54,7 @@ export class DashboardComponent implements OnInit {
         console.log(this.estateList);
       }
     }).catch((error) => {
-      console.error('Failed to fetch user estates', error);
+      // console.error('Failed to fetch user estates', error);
       window.location.href = 'http://localhost:5283/Identity/Account/Login?returnUrl=/dashboard';
     });
   }
