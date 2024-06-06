@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Estate } from './estate';
 
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Facility } from './facility';
 
 @Injectable({
@@ -50,6 +50,12 @@ export class EstateService
       };
   }
 
+  deleteEstate(id: number): Observable<number> {
+    const httpOptions = {
+      withCredentials: true, // Include credentials
+    };
+    return this.http.delete<void>(`${this.url}/delete/id?id=${id}`, httpOptions).pipe(map(() => id));
+  }
   
   getAllEstates(): Observable<Estate[]> {
     return this.http.get<Estate[]>(this.url);

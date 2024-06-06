@@ -9,6 +9,7 @@ import { EstateService } from '../estate.service';
 import { CreateNewEstateComponent } from '../create-new-estate/create-new-estate.component';
 import { Facility } from '../facility';
 import { Image } from '../image';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,7 +23,7 @@ import { Image } from '../image';
     </form>
   </section>
   <section class="results">
-    <app-estate *ngFor="let est of filteredEstateList" [estate]="est"></app-estate>
+    <app-estate *ngFor="let est of filteredEstateList" [estate]="est" (estateDeleted)="onEstateDelete($event)"></app-estate>
     <app-create-new-estate (estateCreated)="onEstateCreate($event)"></app-create-new-estate>
   </section>
   `,
@@ -39,6 +40,11 @@ export class DashboardComponent implements OnInit {
   {
   }
 
+  onEstateDelete(id: number) {
+    this.estateList.splice(this.estateList.findIndex(x => x.id === id), 1);
+    this.filteredEstateList.splice(this.filteredEstateList.findIndex(x => x.id === id), 1);
+  }
+
   onEstateCreate(estate: Estate) {
     console.log("wracamy do dashboard z nowym estatem")
     this.estateList.push(estate);
@@ -51,7 +57,7 @@ export class DashboardComponent implements OnInit {
         var est = resultEstates.map(this.estateService.mapToEstate);
         this.estateList = est;
         this.filteredEstateList = est; 
-        console.log(this.estateList);
+        // console.log(this.estateList);
       }
     }).catch((error) => {
       // console.error('Failed to fetch user estates', error);

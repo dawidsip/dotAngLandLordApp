@@ -4,14 +4,14 @@ import { HomeComponent } from './home/home.component';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogActions, MatDialogContent, MatDialogModule } from '@angular/material/dialog';
 // import { MatChipsModule } from '@angular/material/chips';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, HomeComponent, MatIconModule, FormsModule, ReactiveFormsModule, MatDialogModule,],
+  imports: [RouterOutlet, RouterModule, HomeComponent, MatIconModule, FormsModule, ReactiveFormsModule, MatDialogModule, ],
   template: `
     <main>
       <a [routerLink]="['/']">
