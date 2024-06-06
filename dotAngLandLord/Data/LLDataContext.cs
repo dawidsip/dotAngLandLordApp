@@ -39,21 +39,33 @@ public class LLDataContext : IdentityDbContext, ILLDataContext
             .HasForeignKey(i => i.EstateId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // modelBuilder.Entity<Estate>()
+        //     .HasMany(estate => estate.EstateFacilities)
+        //     .WithOne()
+        //     .HasForeignKey(ef => ef.EstateId)
+            // .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<EstateFacility>()
             .HasKey(e => new { e.EstateId, e.FacilityId });
 
         modelBuilder.Entity<EstateFacility>()
             .HasOne(ef => ef.Estate)
             .WithMany(e => e.EstateFacilities)
-            .HasForeignKey(es => es.EstateId);
+            .HasForeignKey(es => es.EstateId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<EstateFacility>()
             .HasOne(ef => ef.Facility)
             .WithMany(f => f.EstateFacilities)
-            .HasForeignKey(ff => ff.FacilityId);
+            .HasForeignKey(ff => ff.FacilityId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Facility>()
             .HasKey(f => f.Id);
+            // .HasMany(f => f.EstateFacilities)
+            // .WithOne(ef => ef.Facility)
+            // .OnDelete(DeleteBehavior.Cascade)
+            
 
         // modelBuilder.Entity<Image>()
         //     .HasOne(i => i.Estate)

@@ -83,6 +83,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IFileService, FileService>();
 builder.Services.AddTransient<IEstateService, EstateService>();
 var app = builder.Build();
 

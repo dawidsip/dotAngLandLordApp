@@ -107,4 +107,17 @@ public class EstateController : ControllerBase
         
         return Ok(facilities);
     }
+
+    [Authorize]
+    [HttpDelete("delete/id")]
+    public async Task<IActionResult> DeleteEstate(int id)
+    {
+        var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("User ID not found in claims.");
+        }
+        var result = await _estateService.DeleteEstate(id, userId);
+        return result ? Ok(result) : NotFound($"No estate found for user ID: {userId}");
+    }
 }
