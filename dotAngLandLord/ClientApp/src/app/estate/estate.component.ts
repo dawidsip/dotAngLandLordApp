@@ -8,26 +8,42 @@ import { MatIconModule } from '@angular/material/icon';
 import {MatRippleModule} from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-estate',
   standalone: true,
-  imports: [RouterLink, CommonModule, RouterOutlet, MatIconModule, MatRippleModule],
+  imports: [RouterLink, CommonModule, RouterOutlet, MatIconModule, MatRippleModule, MatButtonModule],
   template: `
+  
   <section class="listing">
-    <img class="listing-photo" *ngIf="mainImage.fileName" [src]="'http://localhost:5283/UserImages/' + mainImage.fileName" alt="Exterior photo of {{estate.name}}">
-    <h2 class="listing-heading">{{ estate.name }}</h2>
-    <p class="listing-location">{{ estate.city}}, {{estate.region }}</p>
-    <a (click)="selectEstate()" [routerLink]="['/details', estate.id]">Learn More</a>
-    <button  mat-icon-button aria-label="close dialog" (click)="onDelete()">
-      <mat-icon>delete</mat-icon>
-    </button>
+    <div class="image-container">
+      <img class="listing-photo" *ngIf="mainImage.fileName" [src]="'http://localhost:5283/UserImages/' + mainImage.fileName" alt="Exterior photo of {{estate.name}}">
+    </div>
+    <div class="lower-half">  
+      <div class="left">
+        <h2 class="listing-heading">{{ estate.name }}</h2>
+        <p class="listing-location">{{ estate.city}}, {{estate.region }}</p>
+        <a (click)="selectEstate()" [routerLink]="['/details', estate.id]">Learn More</a>
+      </div>  
+      <div class="icons-block">  
+        <button  mat-icon-button aria-label="close dialog" (click)="onDelete()">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button  mat-icon-button aria-label="edit estate" (click)="onEdit()">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+    </div>
   </section>
   `,
   styleUrl: './estate.component.scss'
 })
 
 export class EstateComponent {
+onEdit() {
+throw new Error('Method not implemented.');
+}
 
   @Input() estate!: Estate;
   @Output() estateDeleted = new EventEmitter<number>();

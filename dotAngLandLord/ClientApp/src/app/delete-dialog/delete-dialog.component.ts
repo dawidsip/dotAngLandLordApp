@@ -19,7 +19,7 @@ import { EstateService } from '../estate.service';
       Delete {{estateService.selectedEstate.name}}?
     </mat-dialog-content>
     <mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="false">No</button>
+      <button mat-button [mat-dialog-close]="false">No</button>
       <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Ok</button>
     </mat-dialog-actions>
   `,
