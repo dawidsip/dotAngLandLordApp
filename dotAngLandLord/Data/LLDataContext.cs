@@ -99,7 +99,7 @@ public class LLDataContext : IdentityDbContext, ILLDataContext
             .Where(f => f.IsBasic == true)
             .ToListAsync();
 
-        basics.ForEach(f => f.IsPresent = true);
+        basics.ForEach(f => f.IsPresent = false);
         // basics.ForEach(f =>System.Console.WriteLine(f.Name+", is basik: "+f.IsBasic));
         return basics;
     }

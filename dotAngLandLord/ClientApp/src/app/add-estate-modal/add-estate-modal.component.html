@@ -1,108 +1,109 @@
-    <div mat-dialog-title class="dialog-title">
+<div mat-dialog-title class="dialog-title">
 
-      <h2 mat-dialog-title>Add Estate</h2>
-      <button  matRipple [matRippleColor]="myColor" class="close-button" mat-icon-button aria-label="close dialog" mat-dialog-close (click)="onCancel()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-    <div class="upload-container">
-      <div class="image-upload-container">
-        <div class="img-group">
-          <div 
-            class="img-container" 
-            [class.selected]="selectedImageIndex === 0 && imagePreviews.length > 0"
-            (click)="selectImage(0)">
-            <img *ngIf="imagePreviews.length > 0" [src]="imagePreviews[0].src"/>
-          </div>
-          <div 
-            class="img-container" 
-            [class.selected]="selectedImageIndex === 1 && imagePreviews.length > 1"
-            (click)="selectImage(1)">
-            <img *ngIf="imagePreviews.length > 1" [src]="imagePreviews[1].src"/>
-          </div>
-          <div 
-            class="img-container" 
-            [class.selected]="selectedImageIndex === 2 && imagePreviews.length > 2"
-            (click)="selectImage(2)">
-            <img *ngIf="imagePreviews.length > 2" [src]="imagePreviews[2].src"/>
-          </div>
-          <div 
-            class="img-container" 
-            [class.selected]="selectedImageIndex === 3 && imagePreviews.length > 3"
-            (click)="selectImage(3)">
-            <img *ngIf="imagePreviews.length > 3" [src]="imagePreviews[3].src"/>
-          </div>
-          <div 
-            class="img-container" 
-            [class.selected]="selectedImageIndex === 4 && imagePreviews.length > 4"
-            (click)="selectImage(4)">
-            <img *ngIf="imagePreviews.length > 4" [src]="imagePreviews[4].src"/>
-          </div>
-        </div>
-        <button matRipple [matRippleColor]="myColor" color="primary" type="button" (click)="onClearImagePreviews()" mat-fab extended [disabled]="!imagePreviews" aria-label="clear all images">
-          <mat-icon>delete</mat-icon>
-        </button> 
-        <button matRipple [matRippleColor]="myColor" class="primary upload-button" color="primary" type="button" mat-raised-button aria-label="upload dialog" (click)="fileInput.click()">
-        <input hidden (change)="onFileSelected($event)" #fileInput type="file" multiple accept="image/png, image/jpeg">
-          Upload images
-        </button>
+  <h2 mat-dialog-title>{{this.title}}</h2>
+  <button  matRipple [matRippleColor]="myColor" class="close-button" mat-icon-button aria-label="close dialog" mat-dialog-close (click)="onCancel()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div class="upload-container">
+  <div class="image-upload-container">
+    <div class="img-group">
+      <div 
+        class="img-container" 
+        [class.selected]="selectedImageIndex === 0 && imagePreviews.length > 0"
+        (click)="selectImage(0)">
+        <img *ngIf="imagePreviews.length > 0" [src]="imagePreviews[0].src"/>
+      </div>
+      <div 
+        class="img-container" 
+        [class.selected]="selectedImageIndex === 1 && imagePreviews.length > 1"
+        (click)="selectImage(1)">
+        <img *ngIf="imagePreviews.length > 1" [src]="imagePreviews[1].src"/>
+      </div>
+      <div 
+        class="img-container" 
+        [class.selected]="selectedImageIndex === 2 && imagePreviews.length > 2"
+        (click)="selectImage(2)">
+        <img *ngIf="imagePreviews.length > 2" [src]="imagePreviews[2].src"/>
+      </div>
+      <div 
+        class="img-container" 
+        [class.selected]="selectedImageIndex === 3 && imagePreviews.length > 3"
+        (click)="selectImage(3)">
+        <img *ngIf="imagePreviews.length > 3" [src]="imagePreviews[3].src"/>
+      </div>
+      <div 
+        class="img-container" 
+        [class.selected]="selectedImageIndex === 4 && imagePreviews.length > 4"
+        (click)="selectImage(4)">
+        <img *ngIf="imagePreviews.length > 4" [src]="imagePreviews[4].src"/>
       </div>
     </div>
-    <form [formGroup]="estateForm" (ngSubmit)="onSubmit()">
-      <mat-dialog-content>
-        <mat-form-field>
-          <input matInput placeholder="Location name" formControlName="name">
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="City" formControlName="city">
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="Region" formControlName="region">
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="Country" formControlName="country">
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="Street name" formControlName="streetName">
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="Street number" formControlName="streetNumber">
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="Flat number" formControlName="flatNumber">
-        </mat-form-field>
-        <form>
-          <mat-form-field appearance="fill" class="facilities-chips">
-            <mat-label>Facilities for your new location:</mat-label>
-            <mat-chip-grid class="mat-mdc-chip-set-stacked" #chipGrid aria-label="Enter facility">
-              @for (bfs of basicFacilities; track bfs) {
-                <mat-chip-option
-                  (removed)="remove(bfs)"
-                  [aria-description]="'press enter to edit ' + bfs.name"
-                >
-                  {{bfs.name}}
-                  <button matChipRemove [attr.aria-label]="'remove ' + bfs.name">
-                    <mat-icon>cancel</mat-icon>
-                  </button>
-                </mat-chip-option>
-              }
-              <input class="mat-mdc-chip-input"
-                matInput
-                value="+ Add facility"
-                placeholder="Enter custom facility..."
-                [matChipInputFor]="chipGrid"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                [matChipInputAddOnBlur]="addOnBlur"
-                (matChipInputTokenEnd)="add($event)"
-                (focus)="onFocus($event)"
-              />
-            </mat-chip-grid>
-          </mat-form-field>
-        </form>
-      </mat-dialog-content>
-      <mat-dialog-actions>        
-        <button matRipple [matRippleColor]="myColor" mat-dialog-close (click)="onCancel()" class="primary" type="button" mat-raised-button color="primary">Cancel</button>
-        &nbsp;
-        <button matRipple [matRippleColor]="myColor" class="primary" type="button" mat-raised-button type="submit" [disabled]="!estateForm.valid" color="primary">Create</button>
-      </mat-dialog-actions>
+    <button matRipple [matRippleColor]="myColor" color="primary" type="button" (click)="onClearImagePreviews()" mat-fab extended [disabled]="!imagePreviews" aria-label="clear all images">
+      <mat-icon>delete</mat-icon>
+    </button> 
+    <button matRipple [matRippleColor]="myColor" class="primary upload-button" color="primary" type="button" mat-raised-button aria-label="upload dialog" (click)="fileInput.click()">
+    <input hidden (change)="onFileSelected($event)" #fileInput type="file" multiple accept="image/png, image/jpeg">
+      Upload images
+    </button>
+  </div>
+</div>
+<form [formGroup]="estateForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field>
+      <input matInput placeholder="Location name" formControlName="name">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="City" formControlName="city">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Region" formControlName="region">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Country" formControlName="country">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Street name" formControlName="streetName">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Street number" formControlName="streetNumber">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Flat number" formControlName="flatNumber">
+    </mat-form-field>
+    <form>
+      <mat-form-field appearance="fill" class="facilities-chips">
+        <mat-label>Facilities for your new location:</mat-label>
+        <mat-chip-grid class="mat-mdc-chip-set-stacked" #chipGrid aria-label="Enter facility">
+          @for (bfs of basicFacilities; track bfs) {
+            <mat-chip-option
+              (removed)="remove(bfs)"
+              [selected]="bfs.isPresent"
+              [aria-description]="'press enter to edit ' + bfs.name"
+            >
+              {{bfs.name}}
+              <button matChipRemove [attr.aria-label]="'remove ' + bfs.name">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-option>
+          }
+          <input class="mat-mdc-chip-input"
+            matInput
+            value="+ Add facility"
+            placeholder="Enter custom facility..."
+            [matChipInputFor]="chipGrid"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add($event)"
+            (focus)="onFocus($event)"
+          />
+        </mat-chip-grid>
+      </mat-form-field>
     </form>
+  </mat-dialog-content>
+  <mat-dialog-actions>        
+    <button matRipple [matRippleColor]="myColor" mat-dialog-close (click)="onCancel()" class="primary" type="button" mat-raised-button color="primary">Cancel</button>
+    &nbsp;
+    <button matRipple [matRippleColor]="myColor" class="primary" type="button" mat-raised-button type="submit" [disabled]="!estateForm.valid" color="primary">{{this.proceed}}</button>
+  </mat-dialog-actions>
+</form>

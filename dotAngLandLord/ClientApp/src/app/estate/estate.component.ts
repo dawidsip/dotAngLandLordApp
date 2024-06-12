@@ -9,6 +9,8 @@ import {MatRippleModule} from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import {MatButtonModule} from '@angular/material/button';
+import { AddEstateModalComponent } from '../add-estate-modal/add-estate-modal.component';
+import { EditEstateModalComponent } from '../edit-estate-modal/edit-estate-modal.component';
 
 @Component({
   selector: 'app-estate',
@@ -42,7 +44,14 @@ import {MatButtonModule} from '@angular/material/button';
 
 export class EstateComponent {
 onEdit() {
-throw new Error('Method not implemented.');
+  this.estate.images.forEach(f => console.log("Edit estate :" + f.fileName));
+    const dialogRef = this.dialog.open(EditEstateModalComponent, {
+      width: '75%',
+      hasBackdrop: true,
+      backdropClass: 'no-close',
+      disableClose: true,
+      data : { estate: this.estate }
+    });
 }
 
   @Input() estate!: Estate;

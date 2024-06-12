@@ -83,6 +83,12 @@ export class EstateService
     return await data.json() ?? {};
   }
 
+  updateEstate(estate: Estate): Observable<Estate> {
+    const httpOptions = {
+      withCredentials: true, // Include credentials
+    };
+    return this.http.put<Estate>(`${this.url}/update`, estate, httpOptions);
+  }
   async getEstatesByUserId(userid: number): Promise<Estate | undefined> {
     const data = await fetch(`${this.url}/userid?userid=${userid}`);
     return await data.json() ?? {};

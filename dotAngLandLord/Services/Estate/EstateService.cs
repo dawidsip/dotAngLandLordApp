@@ -31,7 +31,7 @@ public class EstateService : IEstateService
                 };
 
     public async Task<Estate?> AddNewEstate(IFormCollection formCollection, string userId)
-    {  
+    {
         var estateBuilder = new EstateBuilder(formCollection);
         estateBuilder.AddPlainTextFields();
         await estateBuilder.AddImages();
