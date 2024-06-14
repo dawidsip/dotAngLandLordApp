@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Estate } from './estate';
 
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { Facility } from './facility';
 
 @Injectable({
@@ -84,10 +84,28 @@ export class EstateService
   }
 
   updateEstate(estate: Estate): Observable<Estate> {
+
+    const formData = this.mapEstateToFormData(estate);
     const httpOptions = {
-      withCredentials: true, // Include credentials
+      withCredentials: true,
     };
-    return this.http.put<Estate>(`${this.url}/update`, estate, httpOptions);
+    return this.http.put<HttpResponse<any>>(`${this.url}/update`, formData, httpOptions).pipe(
+      map((response) => {
+        // console.log("response status: "  +response.statusText+"  "+ response.ok);
+        if (response) {
+          console.log('Estate updated successfully, with response ok returned');
+          // return response.body as Estate;
+          return estate;
+        } else {
+          throw new Error('Failed to update estate');
+        }
+      }),
+      catchError((error: any) => {
+        console.error('Failed to update existing estate', error);
+        return throwError(error);
+      })
+    );
+
   }
   async getEstatesByUserId(userid: number): Promise<Estate | undefined> {
     const data = await fetch(`${this.url}/userid?userid=${userid}`);
@@ -106,10 +124,11 @@ export class EstateService
     return await data.json() ?? [];
   }
 
-  async postNewEstate(newEstate: Estate): Promise<Estate | undefined> {
-    const formData = new FormData();
+  private mapEstateToFormData(newEstate: Estate): FormData {
+    let formData = new FormData();
   
     // Add Estate fields to formData
+    formData.append('id', newEstate.id?.toString());
     formData.append('name', newEstate.name);
     formData.append('city', newEstate.city);
     formData.append('region', newEstate.region);
@@ -148,13 +167,13 @@ export class EstateService
       }
       formData.append(`facilities[${index}].isPresent`, facility.isPresent ? 'true' : 'false');
       formData.append(`facilities[${index}].isBasic`, facility.isBasic ? 'true' : 'false');
-
-
     });
-      // Debugging the formData
-      formData.forEach((value, key) => {
-        console.log(key, value);
-      });
+
+    return formData;
+  }
+
+  async postNewEstate(newEstate: Estate): Promise<Estate | undefined> {
+    const formData = this.mapEstateToFormData(newEstate);
 
     const response = await fetch(this.url, {
       method: 'POST',
@@ -170,18 +189,6 @@ export class EstateService
       return undefined;
     }
   }
-  
-  // async postNewEstate(newEstate: Estate): Promise<Estate | undefined> {
-  //   const data = await fetch(this.url, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     credentials: 'include',
-  //     body: JSON.stringify(newEstate)
-  //   });
-  //   return await data.json() ?? {};
-  // }
 
   submitApplication(firstName: string, lastName: string, email: string) {
     console.log(`Homes application received: firstName: ${firstName}, lastName: ${lastName}, email: ${email}.`);

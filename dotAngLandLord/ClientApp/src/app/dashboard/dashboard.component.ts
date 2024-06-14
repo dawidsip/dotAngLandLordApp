@@ -23,7 +23,7 @@ import { Observable } from 'rxjs';
     </form>
   </section>
   <section class="results">
-    <app-estate *ngFor="let est of filteredEstateList" [estate]="est" (estateDeleted)="onEstateDelete($event)"></app-estate>
+    <app-estate *ngFor="let est of filteredEstateList" [estate]="est" (estateUpdated)="onEstateUpdated($event)" (estateDeleted)="onEstateDelete($event)" ></app-estate>
     <app-create-new-estate (estateCreated)="onEstateCreate($event)"></app-create-new-estate>
   </section>
   `,
@@ -35,9 +35,16 @@ export class DashboardComponent implements OnInit {
   public estateList: Estate[] = [];
   filteredEstateList: Estate[] = [];
   estateService: EstateService = inject(EstateService);
+  
 
   constructor(private http: HttpClient, private router: Router)
   {
+  }
+
+  onEstateUpdated(estate: Estate){
+    let idx: number = this.estateList.findIndex(e => e.id == estate.id);
+    this.estateList[idx] = estate;
+    //this.filteredEstateList.push(estate);
   }
 
   onEstateDelete(id: number) {
@@ -48,7 +55,7 @@ export class DashboardComponent implements OnInit {
   onEstateCreate(estate: Estate) {
     console.log("wracamy do dashboard z nowym estatem")
     this.estateList.push(estate);
-    // this.filteredEstateList.push(estate);
+    this.filteredEstateList.push(estate);
   }
 
   ngOnInit() {

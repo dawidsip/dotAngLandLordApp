@@ -159,7 +159,8 @@ export class EditEstateModalComponent {
       this.estateService.updateEstate(newEstate).subscribe({
         // console.log(persistedEstate);
         next: (updatedEstate: Estate | undefined) => {
-          //this.dialogRef.close(updatedEstate);
+          console.log("edit estate: "+ updatedEstate?.id +", returned succesful estate update");
+          this.dialogRef.close(updatedEstate as Estate);
           // indicate success
         },
         error: (error: any) => {

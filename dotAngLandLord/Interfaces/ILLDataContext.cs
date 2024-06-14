@@ -16,4 +16,6 @@ public interface ILLDataContext
 
     // Other members if needed
     public Task<int> SaveChangesAsync();
+
+    public Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Estate> Entry(Estate estate);
 }

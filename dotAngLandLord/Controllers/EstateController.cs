@@ -120,4 +120,37 @@ public class EstateController : ControllerBase
         var result = await _estateService.DeleteEstate(id, userId);
         return result ? Ok(result) : NotFound($"No estate found for user ID: {userId}");
     }
+
+    [Authorize]
+    [HttpPut("update")]
+    public async Task<ActionResult<Estate>> UpdateEstate()
+    {
+        var form = await Request.ReadFormAsync();
+        if (form == null)
+        {
+            Console.WriteLine("Estate appears to be null.");
+            return BadRequest("Estate object is null.");
+        }
+        try
+        {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                _logger.LogWarning("User ID not found.");
+                return Unauthorized("User ID not found.");
+            }
+
+            _logger.LogInformation($"User ID: {userId}");
+        
+            var updatedEstate = await _estateService.UpdateEstate(form, userId);
+            // return CreatedAtAction(nameof(AddNewEstate), new { id = createdEstate.Id }, createdEstate);
+            return Ok(updatedEstate);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("500, Internal server error: " + ex.Message);
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+        // return Ok(await _estateService.UpdateEstate(form));
+    }
 }

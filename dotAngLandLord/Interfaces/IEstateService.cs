@@ -13,6 +13,6 @@ public interface IEstateService
     Task<Estate> GetById(int id, string userId);
 
     Task<IEnumerable<Facility>> GetFacilities(string facilitiestype);
-    
+    Task<Estate> UpdateEstate(IFormCollection formCollection, string userId);
     Task<bool> DeleteEstate(int id, string userId);
 }

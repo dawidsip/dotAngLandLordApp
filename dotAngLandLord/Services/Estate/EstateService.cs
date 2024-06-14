@@ -49,6 +49,42 @@ public class EstateService : IEstateService
         return null;
     }
 
+    public async Task<Estate?> UpdateEstate(IFormCollection formCollection, string userId)
+    {
+        // Build the updated estate object
+        var estateBuilder = new EstateBuilder(formCollection);
+        estateBuilder.AddPlainTextFields();
+        await estateBuilder.AddImages();
+        await estateBuilder.AddFacilities(_context);
+        var updatedEstate = await estateBuilder.Build();
+        
+        // Set the user ID
+        updatedEstate.UserId = userId;
+
+        // Fetch the existing estate from the database
+        var existingEstate = await _context.Estates.FindAsync(updatedEstate.Id);
+        if (existingEstate == null)
+        {
+            // Handle the case where the estate does not exist
+            return null;
+        }
+
+        // Update the existing estate with the new values
+        _context.Entry(existingEstate).CurrentValues.SetValues(updatedEstate);
+
+        // Save the changes to the database
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            System.Console.WriteLine("onto saving files");
+            // Save image files if the database update was successful
+            await _fileService.SaveImageFiles(updatedEstate.Images, "wwwroot/UserImages/");
+            return existingEstate;
+        }
+
+        // Return null if the update failed
+        return null;
+    }
+
     public async Task<bool> DeleteEstate(int id, string userId)
     {
         var estate = await _context.Estates.FirstOrDefaultAsync(e => e.UserId == userId && e.Id == id);

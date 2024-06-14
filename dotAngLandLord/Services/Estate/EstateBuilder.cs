@@ -22,6 +22,9 @@ internal class EstateBuilder
 
     internal void AddPlainTextFields()
     {
+        // System.Console.WriteLine(Environment.NewLine+"id from formdata is : "+ _formCollection["id"].ToString() + Environment.NewLine);
+        estate.Id = int.TryParse(_formCollection["id"].ToString(), out var id) ? id : 0;
+        // System.Console.WriteLine(Environment.NewLine+"id after parsing  is : "+ estate.Id + Environment.NewLine);
         estate.Name = _formCollection["name"];
         estate.City = _formCollection["city"];
         estate.Region = _formCollection["region"];

@@ -43,19 +43,10 @@ import { EditEstateModalComponent } from '../edit-estate-modal/edit-estate-modal
 })
 
 export class EstateComponent {
-onEdit() {
-  this.estate.images.forEach(f => console.log("Edit estate :" + f.fileName));
-    const dialogRef = this.dialog.open(EditEstateModalComponent, {
-      width: '75%',
-      hasBackdrop: true,
-      backdropClass: 'no-close',
-      disableClose: true,
-      data : { estate: this.estate }
-    });
-}
 
   @Input() estate!: Estate;
   @Output() estateDeleted = new EventEmitter<number>();
+  @Output() estateUpdated = new EventEmitter<Estate>();
   estateService = inject(EstateService);
   mainImage: Image = { id: undefined, estateId: undefined, isMain: true, fileName: '', data: undefined };
   myColor = 'rgba(177, 127, 177, 0.5)';
@@ -65,6 +56,21 @@ onEdit() {
     if (this.estate !== undefined && this.estate.images) {
       this.mainImage.fileName = this.estate.images.find(image => image.isMain === true)?.fileName || '';
     }
+  }
+
+  onEdit() {
+    const dialogRef = this.dialog.open(EditEstateModalComponent, {
+      width: '75%',
+      hasBackdrop: true,
+      backdropClass: 'no-close',
+      disableClose: true,
+      data : { estate: this.estate }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result)
+        this.estateUpdated.emit(result);
+    });
   }
 
   onDelete() {

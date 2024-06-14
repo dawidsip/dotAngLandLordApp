@@ -105,4 +105,6 @@ public class LLDataContext : IdentityDbContext, ILLDataContext
     }
 
     public Task<int> SaveChangesAsync() => base.SaveChangesAsync();
+
+    public Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Estate> Entry(Estate estate) => base.Entry<Estate>(estate);
 }
