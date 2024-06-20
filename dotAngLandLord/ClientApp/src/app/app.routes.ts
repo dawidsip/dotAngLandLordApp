@@ -6,11 +6,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 export const routes: Routes = [];
 
 const routeConfig: Routes = [
-    // {
-    //   path: '',
-    //   component: HomeComponent,
-    //   title: 'Home page'
-    // },
+    {
+      path: '',
+      component: HomeComponent,
+      title: 'Home page'
+    },
     {
       path: 'details/:id',
       component: DetailsComponent,

@@ -86,6 +86,7 @@ namespace dotAngLandLord.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            System.Console.WriteLine("\n we are inside OnGetAsync : "+ returnUrl +"\n");
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
