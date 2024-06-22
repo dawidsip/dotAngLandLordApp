@@ -1,4 +1,7 @@
 @import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import '../node_modules/@angular/material/core/theming/all-theme';
+@import '../node_modules/@angular/material/core/color/all-color';
+
 @import "https://fonts.googleapis.com/icon?family=Material+Icons&display=block";
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
@@ -10,16 +13,19 @@
     padding: 0;
   }
   
-  body {
-    font-family: 'Be Vietnam Pro', sans-serif;
-  }
+  // body {
+  //   font-family: 'Be Vietnam Pro', sans-serif;
+  // }
   :root {
     --primary-color: #605DC8;
     --secondary-color: #8B89E6;
     --accent-color: #e8e7fa;
     --shadow-color: #E8E8E8;
+    --mat-amber-500: #FFC107;
+    --mat-amber-700: #FFA000;
   }
-  
+  // Define CSS variables for the colors
+
   // button.primary {
   //   padding: 10px;
   //   // border: solid 1px var(--primary-color);

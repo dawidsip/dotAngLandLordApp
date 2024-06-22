@@ -24,7 +24,6 @@ public class EstateController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetUsersEstates()
     {
-        // System.Console.WriteLine("Entered GetUsersEstates");
         var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         // Console.WriteLine("user ID is: " + userId);
         if (string.IsNullOrEmpty(userId))
@@ -32,7 +31,6 @@ public class EstateController : ControllerBase
             return Unauthorized("User ID not found in claims.");
         }
 
-        // Fetch the user's estates from the service
         var userEstates = await _estateService.GetByUserId(userId);
 
         if (userEstates == null || !userEstates.Any())
@@ -41,7 +39,7 @@ public class EstateController : ControllerBase
             return NotFound($"No estates found for user ID: {userId}");
         }
 
-        return Ok(userEstates); // Return the user's estates
+        return Ok(userEstates);
     }
 
     [Authorize]
@@ -101,10 +99,7 @@ public class EstateController : ControllerBase
     [HttpGet("facilitiestype")]
     public async Task<IActionResult> GetFacilities(string facilitiestype)
     {
-        // System.Console.WriteLine("inside GetFacilities with facilitiestype");
-
         var facilities = await _estateService.GetFacilities(facilitiestype);
-        
         return Ok(facilities);
     }
 
@@ -128,7 +123,6 @@ public class EstateController : ControllerBase
         var form = await Request.ReadFormAsync();
         if (form == null)
         {
-            Console.WriteLine("Estate appears to be null.");
             return BadRequest("Estate object is null.");
         }
         try
@@ -143,7 +137,6 @@ public class EstateController : ControllerBase
             _logger.LogInformation($"User ID: {userId}");
         
             var updatedEstate = await _estateService.UpdateEstate(form, userId);
-            // return CreatedAtAction(nameof(AddNewEstate), new { id = createdEstate.Id }, createdEstate);
             return Ok(updatedEstate);
         }
         catch (Exception ex)
@@ -153,20 +146,4 @@ public class EstateController : ControllerBase
         }
         // return Ok(await _estateService.UpdateEstate(form));
     }
-
-
-    // [HttpGet("IsAuthenticated")]
-    // public async Task<ActionResult> IsAuthenticated()
-    // {
-    //     System.Console.WriteLine("User.Identity != null is: " + User.Identity != null ? "true" : "false");
-    //     System.Console.WriteLine("User.Identity.Name: " + User.Identity.Name);
-    //     System.Console.WriteLine("User.Identity.AuthenticationType: " + User.Identity.AuthenticationType);
-    //     System.Console.WriteLine("\ninside IsAuthenticated controller method with User.Identity.IsAuthenticated set to: "+User.Identity.IsAuthenticated+"\n");
-    //     if (User.Identity.IsAuthenticated)
-    //     {
-    //         System.Console.WriteLine("\ninside when User.Identity.IsAuthenticated = true \n");
-    //         return Ok(new { isAuthenticated = true });
-    //     }
-    //     return Ok(new { isAuthenticated = false });
-    // }
 }
