@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './components/home/home.component';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
@@ -31,6 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
         </span>
         <span fxFlex></span>
         <nav fxHide.xs>
+          <a mat-button [routerLink]="['/']">Home</a>
           <a mat-button [routerLink]="['dashboard']" *ngIf="isLoggedIn">Estates</a>
           <a mat-button [href]="this.url + 'Identity/Account/Login'" *ngIf="!isLoggedIn">Login</a>
           <a mat-button [href]="this.url + 'Identity/Account/Logout'" *ngIf="isLoggedIn">Logout</a>
@@ -44,6 +45,7 @@ import { MatButtonModule } from '@angular/material/button';
       <mat-sidenav-container class="sidenav-container">
         <mat-sidenav #sidenav class="sidenav" [mode]="'over'" [fixedInViewport]="true" [opened]="false" fxHide fxShow.xs>
           <mat-nav-list>
+            <a mat-list-item [routerLink]="['/']">Home</a>
             <a mat-list-item [routerLink]="['dashboard']" *ngIf="isLoggedIn">Estates</a>
             <a mat-list-item [href]="this.url + 'Identity/Account/Login'" *ngIf="!isLoggedIn">Login</a>
             <a mat-list-item [href]="this.url + 'Identity/Account/Logout'" *ngIf="isLoggedIn">Logout</a>

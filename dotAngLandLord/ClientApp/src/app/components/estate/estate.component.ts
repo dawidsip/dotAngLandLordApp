@@ -1,9 +1,9 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Estate } from '../estate';
-import { Image } from '../image';
+import { Estate } from '../../estate';
+import { Image } from '../../image';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { EstateService } from '../estate.service';
+import { EstateService } from '../../estate.service';
 import { MatIconModule } from '@angular/material/icon';
 import {MatRippleModule} from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';

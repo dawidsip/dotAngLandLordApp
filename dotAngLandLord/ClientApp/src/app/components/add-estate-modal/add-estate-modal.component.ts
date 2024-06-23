@@ -1,34 +1,34 @@
-import { Component, OnInit, inject, ViewChildren, QueryList, AfterViewInit, Input, Inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { CommonModule,  } from '@angular/common';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { Estate } from '../estate';
-import { Image } from '../image';
-import { EstateService } from '../estate.service';
+import { Estate } from '../../estate';
+import { Image } from '../../image';
+import { EstateService } from '../../estate.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatRippleModule} from '@angular/material/core';
-import { Facility } from '../facility';
+import { Facility } from '../../facility';
 import {MatChipEditedEvent, MatChipInputEvent, MatChipOption, MatChipsModule} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 
 @Component({
-  selector: 'app-edit-estate-modal',
+  selector: 'app-add-estate-modal',
   standalone: true,
   imports: [ CommonModule, MatDialogModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatIconModule, MatRippleModule, MatChipsModule],
-  templateUrl: '../add-estate-modal/add-estate-modal.component.html',
-  styleUrl: '../add-estate-modal/add-estate-modal.component.scss'
+  templateUrl: './add-estate-modal.component.html',
+  styleUrl: './add-estate-modal.component.scss'
 })
-export class EditEstateModalComponent {
 
-  estate: Estate | null = null;
-  proceed: string = "Update";
-  title: string = "Edit Estate";
+export class AddEstateModalComponent implements OnInit, AfterViewInit {
+
+  title: string = "Add Estate";
+  proceed: string = "Save";
   uploadFiles: File[] = [];
   myColor = 'rgba(177, 127, 177, 0.5)';
   images: Image[] = [];
@@ -40,17 +40,13 @@ export class EditEstateModalComponent {
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   announcer = inject(LiveAnnouncer);
-  userImagesLink = 'http://localhost:5283/UserImages/';  
 
   @ViewChildren(MatChipOption) chipOption!: QueryList<MatChipOption>;
 
   constructor(
-    private dialogRef: MatDialogRef<EditEstateModalComponent>,
-    private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: any)
-  {
-    this.estate = data.estate;
-  }
+    private dialogRef: MatDialogRef<AddEstateModalComponent>,
+    private fb: FormBuilder
+  ) {}
   
   selectImage(index: number): void {
     console.log("selectImage clicked");
@@ -103,22 +99,27 @@ export class EditEstateModalComponent {
   
   ngOnInit() {
     this.createForm();
-    this.basicFacilities = this.estate?.facilities ?? [];
-    this.images = this.estate?.images ?? [];
-    this.imagePreviews = this.images.map((im: Image) => {
-      return { src: this.userImagesLink + im.fileName, fileName: im.fileName };
-    })
+    this.estateService.FetchBasicFacilities().subscribe({
+      next: (value: Facility[]) => {
+        console.log(value);
+        this.basicFacilities = value;
+        },
+      error: (e) =>
+        {
+          console.log("Couldnt retvrieve basic facilities." + e);
+        },
+    });
   }
 
   createForm() {
     this.estateForm = this.fb.group({
-      name: [this.estate?.name || '', Validators.required],
-      city: [this.estate?.city || '', Validators.required],
-      region: [this.estate?.region || '', Validators.required],
-      country: [this.estate?.country || '', Validators.required],
-      streetName: [this.estate?.streetName || '', Validators.required],
-      streetNumber: [this.estate?.streetNumber || '', [Validators.required, Validators.pattern(/^\d*$/)]],
-      flatNumber: [this.estate?.flatNumber || '', [Validators.required, Validators.pattern(/^\d*$/)]],
+      name: ['', Validators.required],
+      city: ['', Validators.required],
+      region: ['', Validators.required],
+      country: ['', Validators.required],
+      streetName: ['', Validators.required],
+      streetNumber: ['', [Validators.required, Validators.pattern(/^\d*$/)]],
+      flatNumber: ['', [Validators.required, Validators.pattern(/^\d*$/)]],
     });
   }
 
@@ -135,8 +136,8 @@ export class EditEstateModalComponent {
       }
       
       const newEstate: Estate = {
-        id: this.estate?.id!,
-        userId: this.estate?.userId!,
+        id: 0,
+        userId: '',
         name: this.estateForm.value.name,
         city: this.estateForm.value.city,
         region: this.estateForm.value.region,
@@ -144,29 +145,19 @@ export class EditEstateModalComponent {
         streetName: this.estateForm.value.streetName,
         streetNumber: this.estateForm.value.streetNumber,
         flatNumber: this.estateForm.value.flatNumber,
-        createdOn: this.estate?.createdOn!,
+        createdOn: new Date(),
         images: this.images ?? [],
         facilities: this.extractFacilities(),
       };
       // console.log("we have this many images : " + newEstate.images.length);
       console.log("we have this many facilities : " + newEstate.facilities.length);
-      // this.estateService.updateEstate(newEstate).then((updatedEstate: Estate | undefined) => {
-      //   // console.log(persistedEstate);
-      //   this.dialogRef.close(updatedEstate);
-      // }).catch((error: any) => {
-      //   console.error('Failed to update existing estate', error);
-      // });
-      this.estateService.updateEstate(newEstate).subscribe({
+      this.estateService.postNewEstate(newEstate).then((persistedEstate: Estate | undefined) => {
         // console.log(persistedEstate);
-        next: (updatedEstate: Estate | undefined) => {
-          console.log("edit estate: "+ updatedEstate?.id +", returned succesful estate update");
-          this.dialogRef.close(updatedEstate as Estate);
-          // indicate success
-        },
-        error: (error: any) => {
-          console.error('Failed to update existing estate', error);
-        }
+        this.dialogRef.close(persistedEstate);
+      }).catch((error) => {
+        console.error('Failed to persist new estate', error);
       });
+    
     }
   }
 
@@ -179,6 +170,7 @@ export class EditEstateModalComponent {
     const facilities: Facility[] = [];
     this.chipOption.forEach(chip => {
       // console.log("chip name is: " + chip.value + " and selected is: " + chip.selected);
+
       var basicChip = this.basicFacilities?.find(f => f.name == chip.value)
       if(basicChip)
       {
@@ -188,6 +180,7 @@ export class EditEstateModalComponent {
       {
         facilities.push({id: undefined, name: chip.value, isPresent: chip.selected, isBasic: false});
       }
+
     });
     
     return facilities;

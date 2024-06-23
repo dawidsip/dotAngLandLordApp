@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { EstateService } from '../estate.service';
-import { Estate } from '../estate';
-import { Image } from '../image';
+import { EstateService } from '../../estate.service';
+import { Estate } from '../../estate';
+import { Image } from '../../image';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Facility } from '../facility';
+import { Facility } from '../../facility';
 import { MatChipsModule } from '@angular/material/chips';
 import { CarouselModule } from 'primeng/carousel';
 import {ButtonModule} from 'primeng/button';
@@ -38,7 +38,8 @@ import {ImageModule} from 'primeng/image';
         </section>
       </div>
       <div class="photos-container">
-        <p-carousel class="photos" [value]="products || []"  
+        <p-carousel class="carousel-photos"
+                    [value]="products || []"  
                     [autoplayInterval]="2500"
                     [numVisible]="1" 
                     [numScroll]="1" 
