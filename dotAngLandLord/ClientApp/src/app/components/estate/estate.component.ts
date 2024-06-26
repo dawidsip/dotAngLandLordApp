@@ -25,7 +25,7 @@ import { EditEstateModalComponent } from '../edit-estate-modal/edit-estate-modal
     <div class="lower-half">  
       <div class="left">
         <h2 class="listing-heading">{{ estate.name }}</h2>
-        <p class="listing-location">{{ estate.city}}, {{estate.region }}</p>
+        <p class="listing-location"><mat-icon color="primary"> place</mat-icon>{{ estate.city}}, {{estate.region }}</p>
         <a (click)="selectEstate()" [routerLink]="['/details', estate.id]">Learn More</a>
       </div>  
       <div class="icons-block">  

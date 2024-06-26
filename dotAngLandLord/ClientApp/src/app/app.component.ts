@@ -14,13 +14,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
+import { FooterComponent } from './components/footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [FlexLayoutModule, CommonModule, RouterOutlet, RouterModule, HomeComponent, 
     MatIconModule, FormsModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatSidenavModule,
-    MatToolbarModule, MatListModule],
+    MatToolbarModule, MatListModule, FooterComponent],
   template: `
     <main>
       <mat-toolbar class="custom-toolbar">
@@ -59,7 +60,11 @@ import { MatButtonModule } from '@angular/material/button';
       <section class="content">
         <router-outlet></router-outlet>
       </section>
+
     </main>
+    <section>
+        <app-footer></app-footer>
+    </section>
   `,
   styleUrl: './app.component.scss'
 })

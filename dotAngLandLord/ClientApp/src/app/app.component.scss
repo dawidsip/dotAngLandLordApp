@@ -45,28 +45,15 @@
   a[mat-button] {
     margin-left: 10px;
   }
-  
-// ul {
-//     list-style-type: none;
-//     margin: 0;
-//     padding: 0;
-//     overflow: hidden;
-//     background-color: transparent;
+
+//   :host {
+//     display: flex;
+//     flex-direction: column;
+//     min-height: 100vh;
 //   }
   
-//   li {
-//     float: right;
+//   main {
+//     flex: 1; // Take up remaining space
+//     padding-bottom: 60px; // Adjust to match the footer height
 //   }
   
-//   li  {
-//     display: block;
-//     color: black;
-//     text-align: center;
-//     padding: 16px;
-//     text-decoration: none;
-//   }
-  
-//   li a:hover {
-//     background-color: black;
-//     color: white;
-//   }
