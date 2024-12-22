@@ -1,0 +1,95 @@
+.container {
+    width: 100%;
+    height: auto;
+    background: linear-gradient(135deg, #3A0CA3, #B5179E, #7209B7);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-top: 60px; // Add padding to the top to prevent text from escaping
+    box-sizing: border-box;
+  }
+  
+  .left {
+    padding: 40px;
+    margin-top: 20px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5); // Semi-transparent background to make text readable
+    z-index: 2;
+    max-width: 100%; // Ensure it doesn't exceed the container width
+  }
+  
+  .right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+  
+  .profile-pic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 5px solid white;
+    object-fit: cover;
+  }
+  
+  .linkedin-link {
+    color: #FFC107;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  
+    &:hover {
+      color: #FFA000;
+    }
+  }
+  
+  h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: white;
+  }
+  
+  p {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: white;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+    //   height: auto; // Allow height to adjust for smaller viewports
+    //   padding: 20px; // Add padding to container
+    }
+  
+    .left {
+      padding: 20px;
+      margin-top: 20px;
+    }
+  
+    .right {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      margin: 20px;
+    }
+  
+    h1 {
+      font-size: 2rem;
+    }
+  
+    p {
+      font-size: 1.2rem;
+    }
+  }
+  

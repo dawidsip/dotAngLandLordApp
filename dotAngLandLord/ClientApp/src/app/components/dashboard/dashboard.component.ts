@@ -4,11 +4,11 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { EstateComponent } from '../estate/estate.component';
-import { Estate } from '../estate';
-import { EstateService } from '../estate.service';
+import { Estate } from '../../estate';
+import { EstateService } from '../../estate.service';
 import { CreateNewEstateComponent } from '../create-new-estate/create-new-estate.component';
-import { Facility } from '../facility';
-import { Image } from '../image';
+import { Facility } from '../../facility';
+import { Image } from '../../image';
 import { Observable } from 'rxjs';
 
 @Component({

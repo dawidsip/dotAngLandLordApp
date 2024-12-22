@@ -2,7 +2,7 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { AddEstateModalComponent } from '../add-estate-modal/add-estate-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Estate } from '../estate';
+import { Estate } from '../../estate';
 
 @Component({
   selector: 'app-create-new-estate',

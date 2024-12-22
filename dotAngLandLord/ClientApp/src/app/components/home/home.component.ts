@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { EstateComponent } from '../estate/estate.component';
-import { EstateService } from '../estate.service';
-import { AuthService } from '../auth.service';
+import { EstateService } from '../../estate.service';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-home',

@@ -1,9 +1,9 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Estate } from '../estate';
-import { Image } from '../image';
+import { Estate } from '../../estate';
+import { Image } from '../../image';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { EstateService } from '../estate.service';
+import { EstateService } from '../../estate.service';
 import { MatIconModule } from '@angular/material/icon';
 import {MatRippleModule} from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,7 +25,7 @@ import { EditEstateModalComponent } from '../edit-estate-modal/edit-estate-modal
     <div class="lower-half">  
       <div class="left">
         <h2 class="listing-heading">{{ estate.name }}</h2>
-        <p class="listing-location">{{ estate.city}}, {{estate.region }}</p>
+        <p class="listing-location"><mat-icon color="primary"> place</mat-icon>{{ estate.city}}, {{estate.region }}</p>
         <a (click)="selectEstate()" [routerLink]="['/details', estate.id]">Learn More</a>
       </div>  
       <div class="icons-block">  

@@ -8,7 +8,7 @@ import {
   MatDialogContent,
   MatDialogModule,
 } from '@angular/material/dialog';
-import { EstateService } from '../estate.service';
+import { EstateService } from '../../estate.service';
 
 @Component({
   selector: 'app-delete-dialog',
